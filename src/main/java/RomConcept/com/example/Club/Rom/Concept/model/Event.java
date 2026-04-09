@@ -1,43 +1,46 @@
 package RomConcept.com.example.Club.Rom.Concept.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-public class User {
+public class Event {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
     @Column(nullable = false)
-    private String name;
+    private String title;
 
-    @Column(nullable = false, unique = true)
-    private String email;
-
-    @Column(nullable = false)
-    private String phone;
+    @Column(nullable = false, columnDefinition = "TEXT")
+    private String description;
 
     @Column(nullable = false)
-    private LocalDate birthDate;
+    private LocalDateTime dateTime;
 
     @Column(nullable = false)
-    private String password;
+    private String location;
+
+    @Column(nullable = false)
+    private String speaker;
+
+    @Column(nullable = false)
+    private Integer capacity;
+
+    @Column(nullable = false)
+    private Integer availableSpots;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Plan plan;
+    private Plan minimumPlan;
 
     @Column(nullable = false)
-    private String avatar;
+    private String image;
 
     @Column(nullable = false)
-    private Boolean active;
+    private String category;
 
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
