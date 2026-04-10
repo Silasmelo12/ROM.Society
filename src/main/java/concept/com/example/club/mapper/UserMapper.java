@@ -13,10 +13,12 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface UserMapper {
 
+
     //@Mapping(target ="id",ignore = true)
     UserCreateRequestDTO toUserCreateRequestDTO(User user);
 
     User toUser(UserCreateRequestDTO dto);
+    User toUser(UserResponseDTO dto);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target="createdAt", ignore = true)

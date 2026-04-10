@@ -15,6 +15,8 @@ public interface EventMapper {
 
     Event toEvent(EventCreateRequestDTO dto);
 
+    Event toEvent(EventResponseDTO dto);
+
     EventResponseDTO toEventResponseDTO(Event event);
 
     void updateEntityFromDto(EventUpdateRequestDTO dto, @MappingTarget Event event);

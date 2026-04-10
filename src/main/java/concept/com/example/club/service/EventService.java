@@ -25,7 +25,7 @@ public class EventService {
         Event event = eventMapper.toEvent(dto);
         event.setCreatedAt(LocalDateTime.now());
         event.setUpdatedAt(LocalDateTime.now());
-        event.setAvailableSpots(5);
+        event.setAvailableSpots(dto.getCapacity());
         log.info("Evento criado: {}", event.getCategory());
         EventResponseDTO response = eventMapper.toEventResponseDTO(eventRepository.save(event));
         log.info("Evento criado: {}", response.getSpeaker());
