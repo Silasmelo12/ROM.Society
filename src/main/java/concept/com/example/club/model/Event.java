@@ -1,5 +1,6 @@
 package concept.com.example.club.model;
 
+import concept.com.example.club.enumeration.Plan;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 

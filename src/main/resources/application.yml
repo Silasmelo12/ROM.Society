@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: Club-Rom-Concept
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/concept?useTimezone=true&serverTimezone=UTC
+    username: postgres
+    password: admin
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+    show-sql: false

@@ -24,6 +24,9 @@ public class UserService {
 
     public UserResponseDTO create(UserCreateRequestDTO dto){
         User user = userMapper.toUser(dto);
+        user.setActive(true);
+        user.setCreatedAt(LocalDateTime.now());
+        user.setUpdatedAt(LocalDateTime.now());
         return userMapper.toUserResponseDTO(userRepository.save(user));
     }
 

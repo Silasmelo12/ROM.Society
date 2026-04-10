@@ -1,5 +1,6 @@
 package concept.com.example.club.model;
 
+import concept.com.example.club.enumeration.RegistrationStatus;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
