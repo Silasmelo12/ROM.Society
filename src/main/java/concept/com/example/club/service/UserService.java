@@ -45,7 +45,7 @@ public class UserService {
     public UserResponseDTO update(String id, UserUpdateRequestDTO dto){
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException("User com id: {} não foi encontrado." + id));
-        userMapper.toUser(dto,user);
+        userMapper.updateEntityFromDto(dto,user);
         user.setUpdatedAt(LocalDateTime.now());
         return userMapper.toUserResponseDTO(userRepository.save(user));
     }

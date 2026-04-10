@@ -19,7 +19,8 @@ public interface UserMapper {
     User toUser(UserCreateRequestDTO dto);
 
     @Mapping(target = "id", ignore = true)
-    void toUser(UserUpdateRequestDTO dto, @MappingTarget User user);
+    @Mapping(target="createdAt", ignore = true)
+    void updateEntityFromDto(UserUpdateRequestDTO dto, @MappingTarget User user);
 
     UserResponseDTO toUserResponseDTO(User user);
 

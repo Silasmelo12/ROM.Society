@@ -33,7 +33,4 @@ public class UserUpdateRequestDTO {
     @Pattern(regexp = "^https?://.*", message = "Avatar deve ser uma URL válida")
     String avatar;
 
-    @NotNull(message = "Status ativo é obrigatório")
-    Boolean active;
-
 }
