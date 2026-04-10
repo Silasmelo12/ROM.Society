@@ -1,4 +1,5 @@
 spring:
+
   application:
     name: Club-Rom-Concept
   datasource:
@@ -11,4 +12,5 @@ spring:
       ddl-auto: update
     properties:
       hibernate:
-    show-sql: false
+    show-sql: true
+

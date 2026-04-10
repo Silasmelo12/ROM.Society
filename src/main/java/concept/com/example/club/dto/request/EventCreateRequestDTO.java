@@ -1,23 +1,13 @@
-package concept.com.example.club.model;
+package concept.com.example.club.dto.request;
 
 import concept.com.example.club.enumeration.Plan;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
-@Entity
-@Table(name = "event")
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class Event {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
+public class EventCreateRequestDTO {
 
     @Column(nullable = false)
     private String title;
@@ -37,9 +27,6 @@ public class Event {
     @Column(nullable = false)
     private Integer capacity;
 
-    @Column(nullable = false)
-    private Integer availableSpots;
-
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Plan minimumPlan;
@@ -50,9 +37,4 @@ public class Event {
     @Column(nullable = false)
     private String category;
 
-    @Column(nullable = false, updatable = false)
-    private LocalDateTime createdAt;
-
-    @Column(nullable = false)
-    private LocalDateTime updatedAt;
 }
