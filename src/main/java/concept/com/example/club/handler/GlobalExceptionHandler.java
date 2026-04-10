@@ -1,28 +1,60 @@
 package concept.com.example.club.handler;
 
 import concept.com.example.club.exception.EventNotFoundException;
+import concept.com.example.club.exception.ExceptionResponse;
 import concept.com.example.club.exception.RegistrationNotFoundException;
 import concept.com.example.club.exception.UserNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-@RestControllerAdvice
-public class GlobalExceptionHandler {
+import java.util.Date;
+
+@ControllerAdvice
+@RestController
+public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ExceptionResponse> handleAllExceptions(Exception ex,WebRequest request) {
+        ExceptionResponse response = new ExceptionResponse(
+                new Date(),
+                ex.getMessage(),
+                request.getDescription(false)
+        );
+        return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 
     @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<String> handlerUserNotFound(UserNotFoundException ex){
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+    public ResponseEntity<ExceptionResponse> handlerUserNotFound(UserNotFoundException ex, WebRequest request) {
+        ExceptionResponse response = new ExceptionResponse(
+                new Date(),
+                ex.getMessage(),
+                request.getDescription(false)
+        );
+        return new ResponseEntity<>(response,HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(EventNotFoundException.class)
-    public ResponseEntity<String> handlerEventiNotFound(EventNotFoundException ex){
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+    public ResponseEntity<ExceptionResponse> handlerEventiNotFound(EventNotFoundException ex,WebRequest request) {
+        ExceptionResponse response = new ExceptionResponse(
+                new Date(),
+                ex.getMessage(),
+                request.getDescription(false)
+        );
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 
-    public ResponseEntity<String> handlerRegistrationNotFound(RegistrationNotFoundException ex){
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+    public ResponseEntity<ExceptionResponse> handlerRegistrationNotFound(RegistrationNotFoundException ex, WebRequest request) {
+        ExceptionResponse response =  new ExceptionResponse(
+                new Date(),
+                ex.getMessage(),
+                request.getDescription(false)
+        );
+        return new ResponseEntity<>(response,HttpStatus.NOT_FOUND);
     }
 
 
