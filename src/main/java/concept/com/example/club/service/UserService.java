@@ -37,9 +37,8 @@ public class UserService {
     }
 
     public List<UserResponseDTO> findAll(){
-        return userMapper.toUserResponseDTO(userRepository.findAll());
+        return userMapper.toUserResponseDTO(userRepository.findByActiveTrue());
     }
-
 
     public UserResponseDTO update(String id, UserUpdateRequestDTO dto){
         User user = userRepository.findById(id)
@@ -56,6 +55,7 @@ public class UserService {
     public void softDelete(String id) {
         User user = userRepository.findById(id)
                 .orElseThrow(()->new UserNotFoundException("Usuário não encontrado com o id: {}"+id));
+        user.setUpdatedAt(LocalDateTime.now());
         user.setActive(false);
         userRepository.save(user);
     }

@@ -45,7 +45,6 @@ public class EventService {
 
     public List<EventResponseDTO> findAll() {
         return eventMapper.toEventResponseDTO(eventRepository.findAll());
-
     }
 
     public EventResponseDTO findById(String id) {
