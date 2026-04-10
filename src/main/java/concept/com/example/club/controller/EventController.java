@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("concept/event")
+@RequestMapping("api/vi/events")
 @RequiredArgsConstructor
 public class EventController {
 

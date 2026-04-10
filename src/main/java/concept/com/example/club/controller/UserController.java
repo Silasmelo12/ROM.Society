@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("concept")
+@RequestMapping("api/vi/users")
 @RequiredArgsConstructor
 public class UserController {
 
@@ -24,16 +24,16 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.create(dto));
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<UserResponseDTO> findById(@PathVariable String id){
-        return ResponseEntity.status(HttpStatus.OK).body(userService.findById(id));
-    }
-
     // profissionalmente, findAll() deve ter paginação
     @GetMapping
     public ResponseEntity<List<UserResponseDTO>> findAll(){
         List<UserResponseDTO> users = userService.findAll();
         return ResponseEntity.status(HttpStatus.OK).body(users);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<UserResponseDTO> findById(@PathVariable String id){
+        return ResponseEntity.status(HttpStatus.OK).body(userService.findById(id));
     }
 
     @PutMapping("/{id}")
