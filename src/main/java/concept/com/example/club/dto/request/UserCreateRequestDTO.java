@@ -32,4 +32,9 @@ public class UserCreateRequestDTO {
     @Pattern(regexp = "^https?://.*", message = "Avatar deve ser uma URL válida")
     String avatar; // Pode ser opcional ou ter uma URL padrão
 
+    @NotNull(message = "A preferencia deve ser informada")
+    private String preference;
+    @NotNull(message = "O hobby deve ser informado")
+    private String hobby;
+
 }

@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/vi/users")
+@RequestMapping("api/v1/users")
 @RequiredArgsConstructor
 public class UserController {
 
@@ -45,12 +45,6 @@ public class UserController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable String id){
         userService.delete(id);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-    }
-
-    @DeleteMapping("/soft/{id}")
-    public ResponseEntity<Void> softDelete(@PathVariable String id){
-        userService.softDelete(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

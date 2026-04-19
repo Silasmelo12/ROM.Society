@@ -50,4 +50,12 @@ public class User {
 
     @Column(nullable = false)
     private LocalDateTime updatedAt;
+
+    @Column(nullable = false)
+    private String preference;
+
+    @Column(nullable = false)
+    private String hobby;
+
+    // Atividades favoritas
 }

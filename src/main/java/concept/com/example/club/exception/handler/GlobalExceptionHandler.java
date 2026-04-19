@@ -1,9 +1,6 @@
-package concept.com.example.club.handler;
+package concept.com.example.club.exception.handler;
 
-import concept.com.example.club.exception.EventNotFoundException;
-import concept.com.example.club.exception.ExceptionResponse;
-import concept.com.example.club.exception.RegistrationNotFoundException;
-import concept.com.example.club.exception.UserNotFoundException;
+import concept.com.example.club.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -39,7 +36,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(EventNotFoundException.class)
-    public ResponseEntity<ExceptionResponse> handlerEventiNotFound(EventNotFoundException ex,WebRequest request) {
+    public ResponseEntity<ExceptionResponse> handlerEventNotFound(EventNotFoundException ex, WebRequest request) {
         ExceptionResponse response = new ExceptionResponse(
                 new Date(),
                 ex.getMessage(),
@@ -48,6 +45,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(RegistrationNotFoundException.class)
     public ResponseEntity<ExceptionResponse> handlerRegistrationNotFound(RegistrationNotFoundException ex, WebRequest request) {
         ExceptionResponse response =  new ExceptionResponse(
                 new Date(),
@@ -55,6 +53,16 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 request.getDescription(false)
         );
         return new ResponseEntity<>(response,HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(InvalidCapacityException.class)
+    public ResponseEntity<ExceptionResponse> handlerInvalidCapacityException(InvalidCapacityException ex, WebRequest request) {
+        ExceptionResponse response = new ExceptionResponse(
+                new Date(),
+                ex.getMessage(),
+                request.getDescription(false)
+        );
+        return new ResponseEntity<>(response,HttpStatus.BAD_REQUEST);
     }
 
 

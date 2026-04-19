@@ -30,11 +30,10 @@ public class Registration {
     @Column(nullable = false, updatable = false)
     private LocalDateTime registrationDate;
 
+    //receber uma mensagem do porque da desistencia do evento
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private RegistrationStatus status;
 
-    @Column(nullable = false)
-    private Boolean interested;
 
 }

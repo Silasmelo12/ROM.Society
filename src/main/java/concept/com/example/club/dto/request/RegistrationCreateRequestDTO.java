@@ -21,7 +21,4 @@ public class RegistrationCreateRequestDTO {
     @NotNull(message = "Status é obrigatório")
     private RegistrationStatus status;
 
-    @NotNull(message = "Interessado é obrigatório")
-    private Boolean interested;
-
 }

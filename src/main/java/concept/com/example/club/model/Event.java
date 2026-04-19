@@ -40,6 +40,7 @@ public class Event {
     @Column(nullable = false)
     private Integer availableSpots;
 
+    //o evento só pode ficar visível para quem tem o plano mínimo
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Plan minimumPlan;
@@ -55,4 +56,8 @@ public class Event {
 
     @Column(nullable = false)
     private LocalDateTime updatedAt;
+
+    @Column(nullable = false)
+    private Boolean active;
+
 }

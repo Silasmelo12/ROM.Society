@@ -32,7 +32,13 @@ public class UserService {
     public UserResponseDTO findById(String id){
 
         return userMapper.toUserResponseDTO(userRepository.findById(id).orElseThrow(
-                () -> new UserNotFoundException("User com id: {} não foi encontrado."+id)
+                () -> new UserNotFoundException("User com id: "+id+" não foi encontrado.")
+        ));
+    }
+
+    public UserResponseDTO findByEmail(String email){
+        return userMapper.toUserResponseDTO(userRepository.findByEmail(email).orElseThrow(
+                () -> new UserNotFoundException("User com email: "+email+" não foi encontrado.")
         ));
     }
 
@@ -42,19 +48,20 @@ public class UserService {
 
     public UserResponseDTO update(String id, UserUpdateRequestDTO dto){
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new UserNotFoundException("User com id: {} não foi encontrado." + id));
+                .orElseThrow(() -> new UserNotFoundException("User com id: "+id+" não foi encontrado."));
+
+        if(!user.getEmail().equals(dto.getEmail()) && userRepository.existsByEmail(dto.getEmail())){
+            throw new RuntimeException("Email já cadastrado para outro usuário.");
+        }
+
         userMapper.updateEntityFromDto(dto,user);
         user.setUpdatedAt(LocalDateTime.now());
         return userMapper.toUserResponseDTO(userRepository.save(user));
     }
 
-    public void delete(String id){
-        userRepository.deleteById(id);
-    }
-
-    public void softDelete(String id) {
+    public void delete(String id) {
         User user = userRepository.findById(id)
-                .orElseThrow(()->new UserNotFoundException("Usuário não encontrado com o id: {}"+id));
+                .orElseThrow(()->new UserNotFoundException("Usuário não encontrado com o id: "+id));
         user.setUpdatedAt(LocalDateTime.now());
         user.setActive(false);
         userRepository.save(user);

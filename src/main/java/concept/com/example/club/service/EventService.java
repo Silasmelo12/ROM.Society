@@ -3,6 +3,8 @@ package concept.com.example.club.service;
 import concept.com.example.club.dto.request.EventCreateRequestDTO;
 import concept.com.example.club.dto.request.EventUpdateRequestDTO;
 import concept.com.example.club.dto.response.EventResponseDTO;
+import concept.com.example.club.exception.EventNotFoundException;
+import concept.com.example.club.exception.InvalidCapacityException;
 import concept.com.example.club.mapper.EventMapper;
 import concept.com.example.club.model.Event;
 import concept.com.example.club.repository.EventRepository;
@@ -26,6 +28,7 @@ public class EventService {
         event.setCreatedAt(LocalDateTime.now());
         event.setUpdatedAt(LocalDateTime.now());
         event.setAvailableSpots(dto.getCapacity());
+        event.setActive(true);
         log.info("Evento criado: {}", event.getCategory());
         EventResponseDTO response = eventMapper.toEventResponseDTO(eventRepository.save(event));
         log.info("Evento criado: {}", response.getSpeaker());
@@ -35,25 +38,34 @@ public class EventService {
     public EventResponseDTO update(EventUpdateRequestDTO dto, String id) {
         log.info("Evento consultado: {}", id);
         Event event = eventRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Evento não encontrado com o id: " + id));
+                .orElseThrow(() -> new EventNotFoundException("Evento não encontrado com o id: " + id));
 
+        int newAvailableSpots = event.getAvailableSpots() + (dto.getCapacity() - event.getCapacity());
+        if (newAvailableSpots < 0) {
+            throw new InvalidCapacityException("A nova capacidade é menor do que o número de vagas já ocupadas.");
+        }
         eventMapper.updateEntityFromDto(dto, event);
+        event.setCapacity(dto.getCapacity());
+        event.setAvailableSpots(newAvailableSpots);
         event.setUpdatedAt(LocalDateTime.now());
         return eventMapper.toEventResponseDTO(eventRepository.save(event));
     }
 
-
     public List<EventResponseDTO> findAll() {
-        return eventMapper.toEventResponseDTO(eventRepository.findAll());
+        return eventMapper.toEventResponseDTO(eventRepository.findByActiveTrue());
     }
 
     public EventResponseDTO findById(String id) {
-        Event response = eventRepository.findById(id).orElseThrow(
-                () -> new RuntimeException("Evento não encontrado para este id."));
+        Event response = eventRepository.findByIdAndActiveTrue(id).orElseThrow(
+                () -> new EventNotFoundException("Evento não encontrado para este id."));
         return eventMapper.toEventResponseDTO(response);
     }
 
     public void delete(String id) {
-        eventRepository.deleteById(id);
+        Event event = eventRepository.findById(id).orElseThrow(
+                ()->new EventNotFoundException("Evento não encontrado com o id: "+id)
+        ); // Verifica se o evento existe antes de tentar deletar
+        event.setActive(false);
+        eventRepository.save(event);
     }
 }

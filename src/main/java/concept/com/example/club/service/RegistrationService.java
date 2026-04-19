@@ -44,7 +44,6 @@ public class RegistrationService {
         registration.setRegistrationDate(java.time.LocalDateTime.now());
         registration.setUser(user);
         registration.setEvent(event);
-        registration.setInterested(true);
         event.setAvailableSpots(event.getAvailableSpots()-1);
         eventRepository.save(event);
         RegistrationResponseDTO registrationResponseDTO = registrationMapper.toRegistrationResponseDTO(registrationRepository.save(registration));

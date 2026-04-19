@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/vi/events")
+@RequestMapping("api/v1/events")
 @RequiredArgsConstructor
 public class EventController {
 
@@ -39,7 +39,7 @@ public class EventController {
     @PutMapping("/{id}")
     public ResponseEntity<EventResponseDTO> update(@Valid @RequestBody EventUpdateRequestDTO dto, @PathVariable String id){
         EventResponseDTO response = eventService.update(dto,id);
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")

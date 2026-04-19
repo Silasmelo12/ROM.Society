@@ -1,7 +1,7 @@
 package concept.com.example.club.dto.request;
 
 import concept.com.example.club.enumeration.Plan;
-import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -9,32 +9,33 @@ import java.time.LocalDateTime;
 @Data
 public class EventCreateRequestDTO {
 
-    @Column(nullable = false)
+    @NotBlank(message = "Título é obrigatório")
     private String title;
 
-    @Column(nullable = false, columnDefinition = "TEXT")
+    @NotBlank(message = "Descrição é obrigatória")
     private String description;
 
-    @Column(nullable = false)
+    @NotNull(message = "Data e hora são obrigatórias")
+    @Future(message = "Data deve ser no futuro")
     private LocalDateTime dateTime;
 
-    @Column(nullable = false)
+    @NotBlank(message = "Local é obrigatório")
     private String location;
 
-    @Column(nullable = false)
+    @NotBlank(message = "Palestrante é obrigatório")
     private String speaker;
 
-    @Column(nullable = false)
+    @NotNull(message = "Capacidade é obrigatória")
+    @Positive(message = "Capacidade deve ser positiva")
     private Integer capacity;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @NotNull(message = "Plano mínimo é obrigatório")
     private Plan minimumPlan;
 
-    @Column(nullable = false)
+    @NotBlank(message = "Imagem é obrigatória")
+    @Pattern(regexp = "^https?://.*", message = "Imagem deve ser uma URL válida")
     private String image;
 
-    @Column(nullable = false)
+    @NotBlank(message = "Categoria é obrigatória")
     private String category;
-
 }

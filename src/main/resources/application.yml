@@ -1,16 +1,27 @@
-spring:
+server:
+  port: 8000
 
+spring:
   application:
     name: Club-Rom-Concept
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/concept?useTimezone=true&serverTimezone=UTC
+    #url: jdbc:postgresql://localhost:5432/concept?useTimezone=true&serverTimezone=UTC
+    url: jdbc:postgresql://localhost:5433/concept
     username: postgres
-    password: admin
+    password: postgres
   jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
       ddl-auto: update
     properties:
       hibernate:
     show-sql: true
 
+# Tradução do seu EVOLUTION_URL, AUTHENTICATION_API_KEY e NOME_INSTANCIA
+# O Java vai ler isso aqui para montar a requisição HTTP
+evolution:
+  api:
+    url: http://localhost:8080
+    key: "12345" # Tem que ser a mesma do AUTHENTICATION_API_KEY ali de cima!
+    instance-name: "Tetrix_Bot"
