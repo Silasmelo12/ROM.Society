@@ -5,6 +5,7 @@ import jakarta.validation.constraints.*;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 public class UserCreateRequestDTO {
@@ -35,6 +36,6 @@ public class UserCreateRequestDTO {
     @NotNull(message = "A preferencia deve ser informada")
     private String preference;
     @NotNull(message = "O hobby deve ser informado")
-    private String hobby;
+    private List<String> hobbies;
 
 }

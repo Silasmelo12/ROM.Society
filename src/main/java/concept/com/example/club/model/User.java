@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -54,8 +56,20 @@ public class User {
     @Column(nullable = false)
     private String preference;
 
-    @Column(nullable = false)
-    private String hobby;
+    //@Column(nullable = false)
+    //private String hobby;
 
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(
+            name = "usuarios_hobbies", // Nome da 3ª tabela que será criada no banco
+            joinColumns = @JoinColumn(name = "usuario_id"), // A coluna que aponta para o Usuário
+            inverseJoinColumns = @JoinColumn(name = "hobby_id") // A coluna que aponta para o Hobby
+    )
+    private Set<Hobby> hobbies = new HashSet<>();
+
+    public void addHobby(Hobby hobby) {
+        this.hobbies.add(hobby);
+        hobby.getUsers().add(this);
+    }
     // Atividades favoritas
 }

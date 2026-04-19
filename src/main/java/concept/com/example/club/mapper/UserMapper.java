@@ -15,8 +15,10 @@ public interface UserMapper {
 
 
     //@Mapping(target ="id",ignore = true)
+    @Mapping(target = "hobbies", ignore = true)
     UserCreateRequestDTO toUserCreateRequestDTO(User user);
 
+    @Mapping(target = "hobbies", ignore = true)
     User toUser(UserCreateRequestDTO dto);
     User toUser(UserResponseDTO dto);
 

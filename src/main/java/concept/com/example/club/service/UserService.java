@@ -6,7 +6,9 @@ import concept.com.example.club.dto.request.UserUpdateRequestDTO;
 import concept.com.example.club.dto.response.UserResponseDTO;
 import concept.com.example.club.exception.UserNotFoundException;
 import concept.com.example.club.mapper.UserMapper;
+import concept.com.example.club.model.Hobby;
 import concept.com.example.club.model.User;
+import concept.com.example.club.repository.HobbyRepository;
 import concept.com.example.club.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,12 +22,30 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final HobbyRepository hobbyRepository;
+
 
     public UserResponseDTO create(UserCreateRequestDTO dto){
         User user = userMapper.toUser(dto);
         user.setActive(true);
         user.setCreatedAt(LocalDateTime.now());
         user.setUpdatedAt(LocalDateTime.now());
+        List<Hobby> hobbiesExisteds = hobbyRepository.findByNameIn(dto.getHobbies());
+        for (Hobby bobby:hobbiesExisteds){
+            user.getHobbies().add(bobby);
+        }
+
+        List<String> nomesJaCadastrados = hobbiesExisteds
+                .stream()
+                .map(Hobby::getName)
+                .toList();
+
+        for (String nomeRecebido : dto.getHobbies()){
+            if (!nomesJaCadastrados.contains(nomeRecebido)){
+                Hobby newHobby = new Hobby(nomeRecebido);
+                user.addHobby(newHobby);
+            }
+        }
         return userMapper.toUserResponseDTO(userRepository.save(user));
     }
 
