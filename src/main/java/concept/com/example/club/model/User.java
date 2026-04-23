@@ -2,9 +2,7 @@ package concept.com.example.club.model;
 
 import concept.com.example.club.enumeration.Plan;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -13,9 +11,12 @@ import java.util.Set;
 
 @Entity
 @Table(name = "users")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true) // Controla o equals e hashCode
+@ToString(exclude = {"password", "hobbies"}) // Evita expor dados sensíveis e lazy loading
 public class User {
 
     @Id
@@ -23,6 +24,7 @@ public class User {
     private String id;
 
     @Column(nullable = false)
+    @EqualsAndHashCode.Include // Usa o email para equals/hashCode, pois é um identificador de negócio único
     private String name;
 
     @Column(nullable = false, unique = true)
@@ -37,6 +39,7 @@ public class User {
     @Column(nullable = false)
     private String password;
 
+    // Enumeração para o plano do usuário, armazenada como String no banco
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Plan plan;
@@ -47,29 +50,45 @@ public class User {
     @Column(nullable = false)
     private Boolean active;
 
+    // Timestamps de auditoria
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
     @Column(nullable = false)
     private LocalDateTime updatedAt;
 
+    // Preferências do usuário (pode ser um JSON ou um campo de texto simples)
     @Column(nullable = false)
     private String preference;
 
-    //@Column(nullable = false)
-    //private String hobby;
-
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    // Relacionamento Many-to-Many com Hobby
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
     @JoinTable(
-            name = "usuarios_hobbies", // Nome da 3ª tabela que será criada no banco
-            joinColumns = @JoinColumn(name = "usuario_id"), // A coluna que aponta para o Usuário
-            inverseJoinColumns = @JoinColumn(name = "hobby_id") // A coluna que aponta para o Hobby
+            name = "user_hobbies", // Convenção em inglês
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "hobby_id")
     )
     private Set<Hobby> hobbies = new HashSet<>();
 
+    // Métodos de ciclo de vida para automatizar timestamps
+    @PrePersist
+    protected void onCreate() {
+        createdAt = updatedAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = LocalDateTime.now();
+    }
+
+    // Métodos auxiliares para gerenciar o relacionamento bidirecional com Hobby
     public void addHobby(Hobby hobby) {
         this.hobbies.add(hobby);
         hobby.getUsers().add(this);
     }
-    // Atividades favoritas
+
+    public void removeHobby(Hobby hobby) {
+        this.hobbies.remove(hobby);
+        hobby.getUsers().remove(this);
+    }
 }

@@ -41,8 +41,7 @@ public class EvolutionApiService {
         String text = "CLUB ROM: "+ user.getName()+" ("+ user.getPlan()+")\n" +
                 "Chegou agora. \n" +
                 "Preferência: Espresso duplo (sem açúcar).\n" +
-                "Hobby: Vinhos (Bordeaux).\n" +
-                "Toque para ver o histórico completo.";
+                "Hobby: Vinhos (Bordeaux).";
         EvolutionMessageOptionsDTO optionsDTO = new EvolutionMessageOptionsDTO(
                 1200,
                 "composing",

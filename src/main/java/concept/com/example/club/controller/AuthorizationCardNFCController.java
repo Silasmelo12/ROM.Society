@@ -25,9 +25,6 @@ public class AuthorizationCardNFCController {
 
     @GetMapping("/{id}")
     public ResponseEntity<String> authorizationByCard(@PathVariable String id){
-
-
-
         if (deduplicacaoService.isDuplicada(id)){
             log.info("Requisição bloqueada por duplicidade (Anti-Spam).");
             return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS)
