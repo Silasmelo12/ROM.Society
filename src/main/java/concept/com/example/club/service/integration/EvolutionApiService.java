@@ -38,10 +38,13 @@ public class EvolutionApiService {
 
     private static @NonNull EvolutionMessageRequestDTO getEvolutionMessageRequestDTO(UserResponseDTO user) {
         String phone = user.getPhone();
-        String text = "CLUB ROM: "+ user.getName()+" ("+ user.getPlan()+")\n" +
-                "Chegou agora. \n" +
-                "Preferência: Espresso duplo (sem açúcar).\n" +
-                "Hobby: Vinhos (Bordeaux).";
+        String text = "\uD83D\uDC8E ROM Society | "+user.getPlan()+" \uD83D\uDC8E\n\n" +
+                "Nosso cliente exclusivo,  *Sr. "+user.getName()+"*, acaba de chegar.\n\n" +
+                "☕ Ação Imediata:\n" +
+                "Por favor, antecipem o conforto dele preparando um café espresso sem açúcar.\n\n" +
+                "\uD83C\uDF77 Toque de Excelência:\n" +
+                "O Sr. "+user.getName()+" é um apreciador de *vinhos* de Bordeaux. " +
+                "Usem essa informação para criar conexão e oferecer uma recepção agradável.\n";
         EvolutionMessageOptionsDTO optionsDTO = new EvolutionMessageOptionsDTO(
                 1200,
                 "composing",
