@@ -1,6 +1,7 @@
 package concept.com.example.club.service.integration;
 
 import concept.com.example.club.client.EvolutionApiClient;
+import concept.com.example.club.dto.integration.EvolutionMediaRequestDTO;
 import concept.com.example.club.dto.integration.EvolutionMessageOptionsDTO;
 import concept.com.example.club.dto.integration.EvolutionMessageRequestDTO;
 import concept.com.example.club.dto.response.UserResponseDTO;
@@ -54,6 +55,37 @@ public class EvolutionApiService {
                 phone,
                 text,
                 optionsDTO
+        );
+    }
+    public UserResponseDTO sendImageWhatsapp(String id, String imageUrl){
+        UserResponseDTO user = userService.findById(id);
+        EvolutionMediaRequestDTO mediaRequestDTO = getEvolutionMediaRequestDTO(user, imageUrl);
+
+        try {
+            ResponseEntity<Object> response = evolutionApiClient.sendMediaMessage("Tetrix_Bot", mediaRequestDTO);
+            log.info("Mídia enviada com sucesso. Status: {}. Resposta: {}", response.getStatusCode(), response.getBody());
+        } catch(Exception e){
+            throw new RuntimeException("Falha na comunicação de mídia com evolution api: "+e.getMessage());
+        }
+        return user;
+    }
+
+    private static @NonNull EvolutionMediaRequestDTO getEvolutionMediaRequestDTO(UserResponseDTO user, String imageUrl) {
+        String phone = user.getPhone();
+
+        // A legenda (caption) pode usar emojis e negrito igual ao texto
+        String caption = "🎫 *Acesso Confirmado!*\n\nOlá, " + user.getName() + "! " +
+                "Aqui está o convite digital do seu evento. Apresente-o na recepção caso não esteja com seu cartão NFC.";
+
+        // Montando o DTO de imagem passando a URL
+        return new EvolutionMediaRequestDTO(
+                phone,
+                "image",
+                "image/jpeg",
+                caption,
+                imageUrl,
+                "convite-rom-concept.jpg",
+                1200 // Mantendo o mesmo delay elegante de 1.2s que você usou no texto
         );
     }
 }
