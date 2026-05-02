@@ -3,5 +3,8 @@ package concept.com.example.club.enumeration;
 public enum Plan {
     GOLD,
     BLACK,
-    INFINITY
+    INFINITY,
+    ADMIN,
+    BARMAN,
+    CONCIERGE
 }

@@ -25,3 +25,9 @@ evolution:
     url: http://localhost:8080
     key: "12345" # Tem que ser a mesma do AUTHENTICATION_API_KEY ali de cima!
     instance-name: "Tetrix_Bot"
+
+# Chave secreta para assinar os tokens JWT (Mantenha em sigilo!)
+api:
+  security:
+    token:
+      secret: ${JWT_SECRET:bsjçsngpoansgrçJNSEGnSHbJpJYRiJYuJYReJRSnSRGpoARGhnq´0aioAREGçnerl.mnbaeW651tj3216841651jG@#$%8sry15k,kmondkfoalijrnhça5tj6221}

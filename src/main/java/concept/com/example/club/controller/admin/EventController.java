@@ -1,4 +1,4 @@
-package concept.com.example.club.controller;
+package concept.com.example.club.controller.admin;
 
 import concept.com.example.club.dto.request.EventCreateRequestDTO;
 import concept.com.example.club.dto.request.EventUpdateRequestDTO;

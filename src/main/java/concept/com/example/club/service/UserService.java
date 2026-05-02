@@ -11,6 +11,7 @@ import concept.com.example.club.model.User;
 import concept.com.example.club.repository.HobbyRepository;
 import concept.com.example.club.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -23,6 +24,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final HobbyRepository hobbyRepository;
+    private final PasswordEncoder passwordEncoder;
 
 
     public UserResponseDTO create(UserCreateRequestDTO dto){
@@ -46,6 +48,8 @@ public class UserService {
                 user.addHobby(newHobby);
             }
         }
+        String encryptedPassword = passwordEncoder.encode(dto.getPassword());
+        user.setPassword(encryptedPassword);
         return userMapper.toUserResponseDTO(userRepository.save(user));
     }
 

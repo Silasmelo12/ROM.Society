@@ -1,4 +1,4 @@
-package concept.com.example.club.controller;
+package concept.com.example.club.controller.hardware;
 
 import concept.com.example.club.service.DeduplicacaoService;
 import concept.com.example.club.service.integration.EvolutionApiService;
@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/clientes")
+@RequestMapping("/api/v1/totem/checkin")
 public class AuthorizationCardNFCController {
     private final EvolutionApiService evolutionApiService;
     private final Logger log = LoggerFactory.getLogger(AuthorizationCardNFCController.class);
@@ -32,8 +32,8 @@ public class AuthorizationCardNFCController {
         }
         log.warn("Mensagem sendo enviada: {}", id);
 
-        evolutionApiService.sendTextWhatsapp(id);
-        evolutionApiService.sendImageWhatsapp(id, "https://prnt.sc/flL11cJ30rG-");
+        //evolutionApiService.sendTextWhatsapp(id);
+        evolutionApiService.sendImageWhatsapp(id, "https://raw.githubusercontent.com/Silasmelo12/imagemAlan/refs/heads/main/Screenshot_16.png");
 
 
         return ResponseEntity.status(HttpStatus.OK).body("Liberado");

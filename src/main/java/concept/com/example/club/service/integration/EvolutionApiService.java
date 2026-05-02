@@ -74,8 +74,11 @@ public class EvolutionApiService {
         String phone = user.getPhone();
 
         // A legenda (caption) pode usar emojis e negrito igual ao texto
-        String caption = "🎫 *Acesso Confirmado!*\n\nOlá, " + user.getName() + "! " +
-                "Aqui está o convite digital do seu evento. Apresente-o na recepção caso não esteja com seu cartão NFC.";
+        String caption = "*CLIENTE INFINITE*\n\n"+
+                "*Nome:* " + user.getName() + "\n" +
+                "*Perfil:* CEO – Agência de Marketing\n"+
+                "*Bebida:* Espresso sem açúcar\n"+
+                "*Interesses:* Vinhos e Formula 1";
 
         // Montando o DTO de imagem passando a URL
         return new EvolutionMediaRequestDTO(
