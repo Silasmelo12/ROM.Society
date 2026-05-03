@@ -65,5 +65,13 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(response,HttpStatus.BAD_REQUEST);
     }
 
-
+    @ExceptionHandler(TokenExpiradoException.class)
+    public ResponseEntity<ExceptionResponse> handlerTokenExpiradoException(TokenExpiradoException ex, WebRequest request) {
+        ExceptionResponse response = new ExceptionResponse(
+                new Date(),
+                ex.getMessage(),
+                request.getDescription(false)
+        );
+        return new ResponseEntity<>(response,HttpStatus.UNAUTHORIZED);
+    }
 }
