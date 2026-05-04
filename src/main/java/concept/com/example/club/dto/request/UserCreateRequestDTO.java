@@ -34,7 +34,8 @@ public class UserCreateRequestDTO {
     String avatar; // Pode ser opcional ou ter uma URL padrão
 
     @NotNull(message = "A preferencia deve ser informada")
-    private String preference;
+    private List<String> preference;
+
     @NotNull(message = "O hobby deve ser informado")
     private List<String> hobbies;
 

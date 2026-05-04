@@ -21,7 +21,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true) // Controla o equals e hashCode
-@ToString(exclude = {"password", "hobbies", "homeSalon", "adress"}) // Evita expor dados sensíveis e lazy loading
+@ToString(exclude = {"password", "hobbies", "homeSalon", "adress","preferences"}) // Evita expor dados sensíveis e lazy loading
 public class User implements UserDetails {
 
     @Id
@@ -66,16 +66,22 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private LocalDateTime updatedAt;
 
-    // Preferências do usuário (pode ser um JSON ou um campo de texto simples)
-    @Column(nullable = false)
-    private String preference;
+    // Relacionamento Many-to-Many com Preference
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "user_preferences",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "preference_id")
+    )
+
+    private Set<Preference> preferences = new HashSet<>();
 
     // Relacionamento Many-to-Many com Hobby
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
     @JoinTable(
-            name = "user_hobbies", // Convenção em inglês
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "hobby_id")
+            name = "user_hobbies", // Nome da tabela intermediária
+            joinColumns = @JoinColumn(name = "user_id"), // nome da chave estrangeira da tabela onde você está
+            inverseJoinColumns = @JoinColumn(name = "hobby_id") // nome da chave estrangeira da tabela relacionada
     )
     private Set<Hobby> hobbies = new HashSet<>();
 
@@ -83,6 +89,18 @@ public class User implements UserDetails {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "salon_id")
     private Salon homeSalon;
+
+    @ManyToOne
+    @JoinColumn(name = "profession_id")
+    private Profession profession;
+
+    @ManyToOne
+    @JoinColumn(name = "business_area_id")
+    private BusinessArea businessArea;
+
+    @ManyToOne
+    @JoinColumn(name = "revenue_range_id")
+    private RevenueRange revenueRange;
 
     // Métodos de ciclo de vida para automatizar timestamps
     @PrePersist
@@ -99,6 +117,11 @@ public class User implements UserDetails {
     public void addHobby(Hobby hobby) {
         this.hobbies.add(hobby);
         hobby.getUsers().add(this);
+    }
+
+    public void addPreference(Preference preference){
+        this.preferences.add(preference);
+        preference.getUsers().add(this);
     }
 
     public void removeHobby(Hobby hobby) {
@@ -133,5 +156,10 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return this.active;
+    }
+
+    public void removePreference(Preference preference){
+        this.preferences.remove(preference);
+        preference.getUsers().add(this);
     }
 }
