@@ -7,7 +7,10 @@ import concept.com.example.club.dto.response.UserResponseDTO;
 import concept.com.example.club.model.User;
 import concept.com.example.club.service.TokenService;
 import concept.com.example.club.service.UserService;
+import concept.com.example.club.service.integration.EvolutionApiService;
 import jakarta.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -27,6 +30,7 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
     private final TokenService tokenService;
     private final UserService userService;
+    Logger logger = LoggerFactory.getLogger(AuthController.class);
 
     public AuthController(AuthenticationManager authenticationManager, TokenService tokenService, UserService userService) {
         this.authenticationManager = authenticationManager;
@@ -37,6 +41,7 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDTO> login(@RequestBody AuthenticationDTO data) {
 
+        logger.info("senha: "+data.password());
         var usernamePassword = new UsernamePasswordAuthenticationToken(data.email(), data.password());
 
         Authentication auth = this.authenticationManager.authenticate(usernamePassword);

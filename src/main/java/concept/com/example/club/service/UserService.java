@@ -7,8 +7,10 @@ import concept.com.example.club.dto.response.UserResponseDTO;
 import concept.com.example.club.exception.UserNotFoundException;
 import concept.com.example.club.mapper.UserMapper;
 import concept.com.example.club.model.Hobby;
+import concept.com.example.club.model.Preference;
 import concept.com.example.club.model.User;
 import concept.com.example.club.repository.HobbyRepository;
+import concept.com.example.club.repository.PreferenceRepository;
 import concept.com.example.club.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -24,8 +26,8 @@ public class UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final HobbyRepository hobbyRepository;
+    private final PreferenceRepository preferenceRepository;
     private final PasswordEncoder passwordEncoder;
-
 
     public UserResponseDTO create(UserCreateRequestDTO dto){
         User user = userMapper.toUser(dto);
@@ -33,14 +35,32 @@ public class UserService {
         user.setCreatedAt(LocalDateTime.now());
         user.setUpdatedAt(LocalDateTime.now());
         List<Hobby> hobbiesExisteds = hobbyRepository.findByNameIn(dto.getHobbies());
-        for (Hobby bobby:hobbiesExisteds){
-            user.getHobbies().add(bobby);
+
+        for (Hobby hobby:hobbiesExisteds){
+            user.addHobby(hobby);
+        }
+
+        List<Preference> preferencesExisteds = preferenceRepository.findByNameIn(dto.getPreferences());
+        for(Preference preference:preferencesExisteds){
+            user.addPreference(preference);
         }
 
         List<String> nomesJaCadastrados = hobbiesExisteds
                 .stream()
                 .map(Hobby::getName)
                 .toList();
+
+        List<String> preferencesJaCadastrados = preferencesExisteds
+                .stream()
+                .map(Preference::getName)
+                .toList();
+
+        for (String nomeRecebido : dto.getPreferences()){
+            if (!preferencesJaCadastrados.contains(nomeRecebido)){
+                Preference newPreference = new Preference(nomeRecebido);
+                user.addPreference(newPreference);
+            }
+        }
 
         for (String nomeRecebido : dto.getHobbies()){
             if (!nomesJaCadastrados.contains(nomeRecebido)){

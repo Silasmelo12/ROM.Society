@@ -2,6 +2,10 @@ server:
   port: 8000
 
 spring:
+  threads:
+    virtual:
+      enabled: true
+
   application:
     name: Club-Rom-Concept
   datasource:

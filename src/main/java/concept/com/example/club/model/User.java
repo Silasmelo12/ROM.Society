@@ -29,10 +29,10 @@ public class User implements UserDetails {
     private String id;
 
     @Column(nullable = false)
-    @EqualsAndHashCode.Include // Usa o email para equals/hashCode, pois é um identificador de negócio único
     private String name;
 
     @Column(nullable = false, unique = true)
+    @EqualsAndHashCode.Include // Usa o email para equals/hashCode, pois é um identificador de negócio único
     private String email;
 
     @Column(nullable = false)
@@ -160,6 +160,6 @@ public class User implements UserDetails {
 
     public void removePreference(Preference preference){
         this.preferences.remove(preference);
-        preference.getUsers().add(this);
+        preference.getUsers().remove(this);
     }
 }

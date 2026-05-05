@@ -25,4 +25,8 @@ public class Preference {
 
     @ManyToMany(mappedBy = "preferences")
     private Set<User> users = new HashSet<>();
+
+    public Preference(String name) {
+        this.name = name;
+    }
 }
