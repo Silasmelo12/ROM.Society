@@ -1,4 +1,4 @@
-package concept.com.example.club.core.salon;
+package concept.com.example.club.core.salon.model;
 
 import concept.com.example.club.core.user.model.User;
 import jakarta.persistence.*;

@@ -1,7 +1,7 @@
 package concept.com.example.club.core.user.model;
 
 import concept.com.example.club.core.user.enumeration.Plan;
-import concept.com.example.club.core.salon.Salon;
+import concept.com.example.club.core.salon.model.Salon;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
