@@ -1,7 +1,6 @@
 package concept.com.example.club.common.exception.handler;
 
 import concept.com.example.club.common.exception.*;
-import concept.com.example.club.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;

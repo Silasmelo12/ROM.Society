@@ -7,20 +7,17 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/registrations")
+@RequestMapping("/api/v1")
 @RequiredArgsConstructor
 public class RegistrationController {
 
     private final RegistrationService registrationService;
 
-    @PostMapping
-    public ResponseEntity<RegistrationResponseDTO> register(@Valid @RequestBody RegistrationCreateRequestDTO dto){
-        return ResponseEntity.status(HttpStatus.CREATED).body(registrationService.create(dto));
+    @PostMapping("/events/{eventID}/register")
+    public ResponseEntity<RegistrationResponseDTO> register(@Valid @PathVariable String eventID){
+        return ResponseEntity.status(HttpStatus.CREATED).body(registrationService.create(eventID));
     }
 }

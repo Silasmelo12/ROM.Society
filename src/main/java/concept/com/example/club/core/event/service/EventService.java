@@ -10,6 +10,8 @@ import concept.com.example.club.core.event.model.Event;
 import concept.com.example.club.core.event.repository.EventRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -51,8 +53,9 @@ public class EventService {
         return eventMapper.toEventResponseDTO(eventRepository.save(event));
     }
 
-    public List<EventResponseDTO> findAll() {
-        return eventMapper.toEventResponseDTO(eventRepository.findByActiveTrue());
+    public Page<EventResponseDTO> findAll(Pageable pageable) {
+        Page<Event> eventsPage = eventRepository.findByActiveTrue(pageable);
+        return eventsPage.map(event -> eventMapper.toEventResponseDTO(event));
     }
 
     public EventResponseDTO findById(String id) {

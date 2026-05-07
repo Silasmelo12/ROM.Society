@@ -6,6 +6,9 @@ import concept.com.example.club.core.event.dto.EventUpdateRequestDTO;
 import concept.com.example.club.core.event.service.EventService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,8 +29,9 @@ public class EventController {
     }
 
     @GetMapping
-    public ResponseEntity<List<EventResponseDTO>> findAll(){
-        List<EventResponseDTO> responseDTOS = eventService.findAll();
+    public ResponseEntity<Page<EventResponseDTO>> findAll(
+            @PageableDefault(page = 0, size = 10)Pageable page){
+        Page<EventResponseDTO> responseDTOS = eventService.findAll(page);
         return new ResponseEntity<>(responseDTOS, HttpStatus.OK);
     }
 

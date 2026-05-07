@@ -12,9 +12,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class RegistrationCreateRequestDTO {
 
-    @NotBlank(message = "ID do usuário é obrigatório")
-    private String userId;
-
     @NotBlank(message = "ID do evento é obrigatório")
     private String eventId;
 

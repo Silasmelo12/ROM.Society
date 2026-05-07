@@ -32,9 +32,7 @@ public class AuthorizationCardNFCController {
         }
         log.warn("Mensagem sendo enviada: {}", id);
 
-        //evolutionApiService.sendTextWhatsapp(id);
         evolutionApiService.sendImageWhatsapp(id, "https://raw.githubusercontent.com/Silasmelo12/imagemAlan/refs/heads/main/Screenshot_16.png");
-
 
         return ResponseEntity.status(HttpStatus.OK).body("Liberado");
     }
