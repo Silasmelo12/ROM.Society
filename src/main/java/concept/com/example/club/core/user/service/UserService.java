@@ -97,9 +97,9 @@ public class UserService {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException("User com id: "+id+" não foi encontrado."));
 
-        if(!user.getEmail().equals(dto.getEmail()) && userRepository.existsByEmail(dto.getEmail())){
-            throw new RuntimeException("Email já cadastrado para outro usuário.");
-        }
+//        if(!user.getEmail().equals(dto.getEmail()) && userRepository.existsByEmail(dto.getEmail())){
+//            throw new RuntimeException("Email já cadastrado para outro usuário.");
+//        }
 
         userMapper.updateEntityFromDto(dto,user);
         user.setUpdatedAt(LocalDateTime.now());

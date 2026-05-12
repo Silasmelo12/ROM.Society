@@ -26,6 +26,8 @@ public interface UserMapper {
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target="createdAt", ignore = true)
+    @Mapping(target = "hobbies", ignore = true)
+    @Mapping(target = "preferences", ignore = true)
     void updateEntityFromDto(UserUpdateRequestDTO dto, @MappingTarget User user);
 
     UserResponseDTO toUserResponseDTO(User user);
