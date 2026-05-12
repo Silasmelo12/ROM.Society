@@ -5,6 +5,9 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 
@@ -13,6 +16,8 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@EntityListeners(AuditingEntityListener.class)
+//@Version
 public class Event {
 
     @Id
@@ -52,12 +57,19 @@ public class Event {
     private String category;
 
     @Column(nullable = false, updatable = false)
+    @CreatedDate
     private LocalDateTime createdAt;
 
     @Column(nullable = false)
+    @LastModifiedDate
     private LocalDateTime updatedAt;
 
     @Column(nullable = false)
     private Boolean active;
+
+    //@Version
+    //private Long version;
+
+
 
 }
