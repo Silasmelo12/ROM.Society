@@ -2,11 +2,16 @@ package concept.com.example.club.core.registration.controller;
 
 import concept.com.example.club.core.registration.dto.RegistrationCreateRequestDTO;
 import concept.com.example.club.core.registration.dto.RegistrationResponseDTO;
+import concept.com.example.club.core.registration.model.Registration;
 import concept.com.example.club.core.registration.service.RegistrationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -19,5 +24,20 @@ public class RegistrationController {
     @PostMapping("/events/{eventID}/register")
     public ResponseEntity<RegistrationResponseDTO> register(@Valid @PathVariable String eventID){
         return ResponseEntity.status(HttpStatus.CREATED).body(registrationService.create(eventID));
+    }
+
+    @PreAuthorize("hasRole('ADMIN') or hasRole('SUPERADMIN')")
+    @GetMapping("/registrations")
+    public ResponseEntity<Page<RegistrationResponseDTO>> findAll(
+            @PageableDefault(page = 0, size = 10)Pageable pageable){
+        Page<RegistrationResponseDTO> responseDTOS = registrationService.findAll(pageable);
+        return new ResponseEntity<>(responseDTOS, HttpStatus.OK);
+    }
+
+    @GetMapping("/registrations/me")
+    public ResponseEntity<Page<RegistrationResponseDTO>> findMyRegistrations(
+            @PageableDefault(page = 0, size = 10)Pageable pageable){
+        Page<RegistrationResponseDTO> responseDTOS = registrationService.findMyRegistrations(pageable);
+        return new ResponseEntity<>(responseDTOS, HttpStatus.OK);
     }
 }

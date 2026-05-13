@@ -2,6 +2,7 @@ package concept.com.example.club.core.user.controller;
 
 import concept.com.example.club.core.user.dto.UserUpdateRequestDTO;
 import concept.com.example.club.core.user.dto.UserResponseDTO;
+import concept.com.example.club.core.user.dto.UserResponseDetailDTO;
 import concept.com.example.club.core.user.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -29,10 +30,15 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(users);
     }
 
-    @PreAuthorize("hasRole('ADMIN') or #id == authentication.principal.id")
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{id}")
-    public ResponseEntity<UserResponseDTO> findById(@PathVariable String id){
+    public ResponseEntity<UserResponseDetailDTO> findById(@PathVariable String id){
         return ResponseEntity.status(HttpStatus.OK).body(userService.findById(id));
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<UserResponseDetailDTO> findById(){
+        return ResponseEntity.status(HttpStatus.OK).body(userService.findByMe());
     }
 
     @PreAuthorize("hasRole('ADMIN') or #id == authentication.principal.id")

@@ -4,7 +4,7 @@ import concept.com.example.club.integration.evolution.client.EvolutionApiClient;
 import concept.com.example.club.integration.evolution.dto.EvolutionMediaRequestDTO;
 import concept.com.example.club.integration.evolution.dto.EvolutionMessageOptionsDTO;
 import concept.com.example.club.integration.evolution.dto.EvolutionMessageRequestDTO;
-import concept.com.example.club.core.user.dto.UserResponseDTO;
+import concept.com.example.club.core.user.dto.UserResponseDetailDTO;
 import concept.com.example.club.core.user.service.UserService;
 import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
@@ -25,8 +25,8 @@ public class EvolutionApiService {
     }
 
 
-    public UserResponseDTO sendTextWhatsapp(String id){
-        UserResponseDTO user = userService.findById(id);
+    public UserResponseDetailDTO sendTextWhatsapp(String id){
+        UserResponseDetailDTO user = userService.findById(id);
         EvolutionMessageRequestDTO evolutionMessageRequestDTO = getEvolutionMessageRequestDTO(user);
         try {
             ResponseEntity<Object> response = evolutionApiClient.sendTextMessage("Tetrix_Bot", evolutionMessageRequestDTO);
@@ -37,7 +37,7 @@ public class EvolutionApiService {
         return user;
     }
 
-    private static @NonNull EvolutionMessageRequestDTO getEvolutionMessageRequestDTO(UserResponseDTO user) {
+    private static @NonNull EvolutionMessageRequestDTO getEvolutionMessageRequestDTO(UserResponseDetailDTO user) {
         String phone = user.getPhone();
         String text = "\uD83D\uDC8E ROM Society | "+user.getPlan()+" \uD83D\uDC8E\n\n" +
                 "Nosso cliente exclusivo,  *Sr. "+user.getName()+"*, acaba de chegar.\n\n" +
@@ -57,8 +57,8 @@ public class EvolutionApiService {
                 optionsDTO
         );
     }
-    public UserResponseDTO sendImageWhatsapp(String id, String imageUrl){
-        UserResponseDTO user = userService.findById(id);
+    public UserResponseDetailDTO sendImageWhatsapp(String id, String imageUrl){
+        UserResponseDetailDTO user = userService.findById(id);
         EvolutionMediaRequestDTO mediaRequestDTO = getEvolutionMediaRequestDTO(user, imageUrl);
 
         try {
@@ -70,7 +70,7 @@ public class EvolutionApiService {
         return user;
     }
 
-    private static @NonNull EvolutionMediaRequestDTO getEvolutionMediaRequestDTO(UserResponseDTO user, String imageUrl) {
+    private static @NonNull EvolutionMediaRequestDTO getEvolutionMediaRequestDTO(UserResponseDetailDTO user, String imageUrl) {
         String phone = user.getPhone();
 
         // A legenda (caption) pode usar emojis e negrito igual ao texto

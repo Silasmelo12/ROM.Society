@@ -4,6 +4,7 @@ package concept.com.example.club.core.user.service;
 import concept.com.example.club.core.user.dto.UserCreateRequestDTO;
 import concept.com.example.club.core.user.dto.UserUpdateRequestDTO;
 import concept.com.example.club.core.user.dto.UserResponseDTO;
+import concept.com.example.club.core.user.dto.UserResponseDetailDTO;
 import concept.com.example.club.common.exception.UserNotFoundException;
 import concept.com.example.club.core.user.mapper.UserMapper;
 import concept.com.example.club.core.user.model.Hobby;
@@ -13,8 +14,11 @@ import concept.com.example.club.core.user.repository.HobbyRepository;
 import concept.com.example.club.core.user.repository.PreferenceRepository;
 import concept.com.example.club.core.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -30,6 +34,10 @@ public class UserService {
     private final HobbyRepository hobbyRepository;
     private final PreferenceRepository preferenceRepository;
     private final PasswordEncoder passwordEncoder;
+
+    //adicionar variavel de log
+    private static final Logger log = org.slf4j.LoggerFactory.getLogger(UserService.class);
+
 
     public UserResponseDTO create(UserCreateRequestDTO dto){
         User user = userMapper.toUser(dto);
@@ -75,9 +83,9 @@ public class UserService {
         return userMapper.toUserResponseDTO(userRepository.save(user));
     }
 
-    public UserResponseDTO findById(String id){
+    public UserResponseDetailDTO findById(String id){
 
-        return userMapper.toUserResponseDTO(userRepository.findById(id).orElseThrow(
+        return userMapper.toUserResponseDetailDTO(userRepository.findById(id).orElseThrow(
                 () -> new UserNotFoundException("User com id: "+id+" não foi encontrado.")
         ));
     }
@@ -114,4 +122,15 @@ public class UserService {
         userRepository.save(user);
     }
 
+    public UserResponseDetailDTO findByMe() {
+
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        User userLogado = userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new UserNotFoundException("Usuário não encontrado"));
+
+        return userMapper.toUserResponseDetailDTO(userRepository.findById(userLogado.getId()).orElseThrow(
+                () -> new UserNotFoundException("User com id: "+userLogado.getId()+" não foi encontrado.")
+        ));
+    }
 }
