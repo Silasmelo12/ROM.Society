@@ -10,6 +10,8 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "events")
@@ -36,7 +38,6 @@ public class Event {
     @Column(nullable = false)
     private String location;
 
-    @Column(nullable = false)
     private String speaker;
 
     @Column(nullable = false)
@@ -45,10 +46,11 @@ public class Event {
     @Column(nullable = false)
     private Integer availableSpots;
 
-    //o evento só pode ficar visível para quem tem o plano mínimo
+    @ElementCollection(targetClass = Plan.class, fetch = FetchType.EAGER) // Eager para facilitar validações em memória
+    @CollectionTable(name = "event_allowed_plans", joinColumns = @JoinColumn(name = "event_id"))
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private Plan minimumPlan;
+    @Column(name = "plan_name", nullable = false)
+    private Set<Plan> allowedPlans= new HashSet<>();
 
     @Column(nullable = false)
     private String image;
