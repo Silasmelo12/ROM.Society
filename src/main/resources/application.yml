@@ -35,3 +35,7 @@ api:
   security:
     token:
       secret: ${JWT_SECRET:bsjçsngpoansgrçJNSEGnSHbJpJYRiJYuJYReJRSnSRGpoARGhnq´0aioAREGçnerl.mnbaeW651tj3216841651jG@#$%8sry15k,kmondkfoalijrnhça5tj6221}
+
+resend:
+  api:
+    key: "re_dbLMPUFr_E3yRszL9VnwNyDWx6KYqce8Z"

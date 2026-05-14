@@ -3,20 +3,16 @@ package concept.com.example.club.core.registration.service;
 import concept.com.example.club.common.exception.EventNotFoundException;
 import concept.com.example.club.common.exception.PlanNotAllowedException;
 import concept.com.example.club.common.exception.UserNotFoundException;
-import concept.com.example.club.core.event.service.EventService;
-import concept.com.example.club.core.registration.dto.RegistrationCreateRequestDTO;
 import concept.com.example.club.core.registration.dto.RegistrationResponseDTO;
 import concept.com.example.club.core.registration.enumeration.RegistrationStatus;
 import concept.com.example.club.core.registration.mapper.RegistrationMapper;
 import concept.com.example.club.core.registration.model.Registration;
 import concept.com.example.club.core.registration.repository.RegistrationRepository;
 import concept.com.example.club.core.user.repository.UserRepository;
-import concept.com.example.club.core.user.service.UserService;
-import concept.com.example.club.core.event.mapper.EventMapper;
-import concept.com.example.club.core.user.mapper.UserMapper;
 import concept.com.example.club.core.event.model.Event;
 import concept.com.example.club.core.user.model.User;
 import concept.com.example.club.core.event.repository.EventRepository;
+import concept.com.example.club.integration.email.ResendEmailService.ResendEmailService;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -33,14 +29,14 @@ public class RegistrationService {
 
     private final RegistrationRepository registrationRepository;
     private final RegistrationMapper registrationMapper;
-    private final EventMapper eventMapper;
     private final EventRepository eventRepository;
     private final UserRepository userRepository;
+    private final ResendEmailService emailService;
 
     private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(RegistrationService.class);
 
     @Transactional
-    public RegistrationResponseDTO create(@Valid String eventId) {
+    public RegistrationResponseDTO registerUserToEvent(@Valid String eventId) {
         String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
 
         User userLogado = userRepository.findByEmail(userEmail).
@@ -69,6 +65,7 @@ public class RegistrationService {
 
         event.setAvailableSpots(event.getAvailableSpots()-1);
         eventRepository.save(event);
+        emailService.sendRegistrationConfirmation(userLogado.getEmail(), userLogado.getName(), event.getTitle());
 
         RegistrationResponseDTO registrationResponseDTO = registrationMapper.toRegistrationResponseDTO(registrationRepository.save(registration));
         registrationResponseDTO.setEventId(event.getId());

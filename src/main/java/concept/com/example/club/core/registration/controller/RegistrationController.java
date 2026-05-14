@@ -1,8 +1,6 @@
 package concept.com.example.club.core.registration.controller;
 
-import concept.com.example.club.core.registration.dto.RegistrationCreateRequestDTO;
 import concept.com.example.club.core.registration.dto.RegistrationResponseDTO;
-import concept.com.example.club.core.registration.model.Registration;
 import concept.com.example.club.core.registration.service.RegistrationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +21,7 @@ public class RegistrationController {
 
     @PostMapping("/events/{eventID}/register")
     public ResponseEntity<RegistrationResponseDTO> register(@Valid @PathVariable String eventID){
-        return ResponseEntity.status(HttpStatus.CREATED).body(registrationService.create(eventID));
+        return ResponseEntity.status(HttpStatus.CREATED).body(registrationService.registerUserToEvent(eventID));
     }
 
     @PreAuthorize("hasRole('ADMIN') or hasRole('SUPERADMIN')")
