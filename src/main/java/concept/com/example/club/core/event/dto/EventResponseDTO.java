@@ -15,7 +15,6 @@ public class EventResponseDTO {
     private String speaker;
     private Integer capacity;
     private Integer availableSpots;
-    private Plan minimumPlan;
     private String image;
     private String category;
     private LocalDateTime createdAt;
