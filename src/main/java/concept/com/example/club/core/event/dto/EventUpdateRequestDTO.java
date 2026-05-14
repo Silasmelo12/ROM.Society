@@ -5,6 +5,8 @@ import jakarta.validation.constraints.*;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 public class EventUpdateRequestDTO {
@@ -22,15 +24,11 @@ public class EventUpdateRequestDTO {
     @NotBlank(message = "Local é obrigatório")
     private String location;
 
-    @NotBlank(message = "Palestrante é obrigatório")
     private String speaker;
 
     @NotNull(message = "Capacidade é obrigatória")
     @Positive(message = "Capacidade deve ser positiva")
     private Integer capacity;
-
-    @NotNull(message = "Plano mínimo é obrigatório")
-    private Plan minimumPlan;
 
     @NotBlank(message = "Imagem é obrigatória")
     @Pattern(regexp = "^https?://.*", message = "Imagem deve ser uma URL válida")
@@ -38,4 +36,7 @@ public class EventUpdateRequestDTO {
 
     @NotBlank(message = "Categoria é obrigatória")
     private String category;
+
+    @NotNull(message = "Plano permitido é obrigatório")
+    private Set<Plan> allowedPlans= new HashSet<>();
 }
