@@ -6,7 +6,8 @@ spring:
     gcp:
       project-id: project-718a7c91-2a2b-47fa-acf
       sql:
-        enabled: true
+        database-name: rom_society
+        instance-connection-name: sproject-718a7c91-2a2b-47fa-acf:us-central1:romsociety
       storage:
         bucket: rom_society
 
