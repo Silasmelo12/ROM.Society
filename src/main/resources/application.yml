@@ -6,7 +6,7 @@ spring:
     gcp:
       project-id: project-718a7c91-2a2b-47fa-acf
       sql:
-        enabled: false
+        enabled: true
       storage:
         bucket: rom_society
 
