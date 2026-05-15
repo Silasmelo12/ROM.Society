@@ -103,6 +103,9 @@ public class User implements UserDetails {
     @JoinColumn(name = "revenue_range_id")
     private RevenueRange revenueRange;
 
+    @Column(name = "marketing_opt_in", nullable = false)
+    private Boolean marketingOptIn;
+
     // Métodos de ciclo de vida para automatizar timestamps
     @PrePersist
     protected void onCreate() {

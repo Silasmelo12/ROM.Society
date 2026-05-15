@@ -11,6 +11,7 @@ import concept.com.example.club.core.event.model.Event;
 import concept.com.example.club.core.event.repository.EventRepository;
 import concept.com.example.club.core.user.model.User;
 import concept.com.example.club.core.user.repository.UserRepository;
+import concept.com.example.club.integration.storage.Service.GcsStorageService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -18,6 +19,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 
@@ -29,12 +31,15 @@ public class EventService {
     private final EventRepository eventRepository;
     private final EventMapper eventMapper;
     private final UserRepository userRepository;
+    private final GcsStorageService storageService;
 
     @Transactional
-    public EventResponseDTO create(EventCreateRequestDTO dto) {
+    public EventResponseDTO create(EventCreateRequestDTO dto, MultipartFile bannerImage) {
+        String imageUrl = storageService.uploadBanner(bannerImage);
         Event event = eventMapper.toEvent(dto);
         event.setAvailableSpots(dto.getCapacity());
         event.setActive(true);
+        event.setImage(imageUrl);
         EventResponseDTO response = eventMapper.toEventResponseDTO(eventRepository.save(event));
         return response;
     }
@@ -65,7 +70,10 @@ public class EventService {
         User userLogado = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new UserNotFoundException("Usuário não encontrado no token."));
 
+        log.info("Buscando eventos permitidos para o usuario: {} com o plano: {}", userEmail, userLogado.getPlan());
         Page<Event> eventsPage = eventRepository.findByActiveTrueAndAllowedPlansContaining(userLogado.getPlan(), pageable);
+        log.info("Total de eventos encontrados pelo banco: {}", eventsPage.getTotalElements());
+
         return eventsPage.map(eventMapper::toEventResponseDTO);
     }
 

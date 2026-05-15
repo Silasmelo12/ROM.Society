@@ -25,7 +25,7 @@ public class RegistrationController {
     }
 
     @PreAuthorize("hasRole('ADMIN') or hasRole('SUPERADMIN')")
-    @GetMapping("/registrations")
+    @GetMapping("/events/{eventID}/registrations")
     public ResponseEntity<Page<RegistrationResponseDTO>> findAll(
             @PageableDefault(page = 0, size = 10)Pageable pageable){
         Page<RegistrationResponseDTO> responseDTOS = registrationService.findAll(pageable);

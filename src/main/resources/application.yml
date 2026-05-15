@@ -2,6 +2,14 @@ server:
   port: 8000
 
 spring:
+  cloud:
+    gcp:
+      project-id: project-718a7c91-2a2b-47fa-acf
+      sql:
+        enabled: false
+      storage:
+        bucket: rom_society
+
   threads:
     virtual:
       enabled: true
@@ -24,11 +32,11 @@ spring:
 
 # Tradução do seu EVOLUTION_URL, AUTHENTICATION_API_KEY e NOME_INSTANCIA
 # O Java vai ler isso aqui para montar a requisição HTTP
-evolution:
-  api:
-    url: http://localhost:8080
-    key: "12345" # Tem que ser a mesma do AUTHENTICATION_API_KEY ali de cima!
-    instance-name: "Tetrix_Bot"
+#evolution:
+#  api:
+#    url: http://localhost:8080
+#    key: "12345" # Tem que ser a mesma do AUTHENTICATION_API_KEY ali de cima!
+#    instance-name: "Tetrix_Bot"
 
 # Chave secreta para assinar os tokens JWT (Mantenha em sigilo!)
 api:

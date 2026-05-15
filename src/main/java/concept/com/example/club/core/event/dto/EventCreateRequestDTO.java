@@ -33,10 +33,6 @@ public class EventCreateRequestDTO {
     @NotNull(message = "Plano permitido é obrigatório")
     private Set<Plan> allowedPlans= new HashSet<>();
 
-    @NotBlank(message = "Imagem é obrigatória")
-    @Pattern(regexp = "^https?://.*", message = "Imagem deve ser uma URL válida")
-    private String image;
-
     @NotBlank(message = "Categoria é obrigatória")
     private String category;
 }

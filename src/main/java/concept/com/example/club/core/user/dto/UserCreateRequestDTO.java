@@ -47,4 +47,7 @@ public class UserCreateRequestDTO {
     @Valid
     private AddressRequestDTO addressRequestDTO;
 
+    @NotNull
+    private Boolean marketingOptIn;
+
 }
