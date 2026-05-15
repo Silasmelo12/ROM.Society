@@ -98,4 +98,35 @@ public class RegistrationService {
             throw new PlanNotAllowedException("O seu plano atual não dá acesso a este evento exclusivo.");
         }
     }
+
+    @Transactional
+    public RegistrationResponseDTO cancelRegistration(String registrationId) {
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        User userLogado = userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new UserNotFoundException("Usuário não encontrado."));
+
+        // 1. Busca a inscrição
+        Registration registration = registrationRepository.findById(registrationId)
+                .orElseThrow(() -> new RuntimeException("Inscrição não encontrada."));
+
+        // 2. Trava de segurança: garantir que só o dono da inscrição pode cancelar
+        if (!registration.getUser().getId().equals(userLogado.getId())) {
+            throw new RuntimeException("Acesso negado: Você não pode cancelar uma inscrição que não é sua.");
+        }
+
+        // 3. Valida se já foi cancelada
+        if (registration.getStatus() == RegistrationStatus.CANCELLED) {
+            throw new RuntimeException("Esta inscrição já encontra-se cancelada.");
+        }
+
+        // 4. Atualiza o status e devolve a vaga para o evento
+        registration.setStatus(RegistrationStatus.CANCELLED);
+        
+        Event event = registration.getEvent();
+        event.setAvailableSpots(event.getAvailableSpots() + 1);
+        eventRepository.save(event);
+
+        return registrationMapper.toRegistrationResponseDTO(registrationRepository.save(registration));
+    }
 }

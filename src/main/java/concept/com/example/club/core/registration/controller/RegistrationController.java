@@ -38,4 +38,10 @@ public class RegistrationController {
         Page<RegistrationResponseDTO> responseDTOS = registrationService.findMyRegistrations(pageable);
         return new ResponseEntity<>(responseDTOS, HttpStatus.OK);
     }
+
+    @PatchMapping("/registrations/{registrationId}/cancel")
+    public ResponseEntity<RegistrationResponseDTO> cancelRegistration(@PathVariable String registrationId) {
+        RegistrationResponseDTO response = registrationService.cancelRegistration(registrationId);
+        return ResponseEntity.ok(response);
+    }
 }
