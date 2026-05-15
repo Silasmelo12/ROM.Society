@@ -72,7 +72,6 @@
 		<dependency>
 			<groupId>com.google.cloud</groupId>
 			<artifactId>spring-cloud-gcp-starter-storage</artifactId>
-			<version>8.0.2</version>
 		</dependency>
 
 		<!-- Integrations -->
@@ -96,7 +95,7 @@
 		<dependency>
 			<groupId>org.jetbrains.kotlin</groupId>
 			<artifactId>kotlin-reflect</artifactId>
-			<version>1.9.22</version> <!-- Use a versão compatível com seu Spring Boot -->
+			<version>1.9.22</version>
 		</dependency>
 		<dependency>
 			<groupId>org.projectlombok</groupId>
@@ -130,15 +129,8 @@
 		<dependencies>
 			<dependency>
 				<groupId>com.google.cloud</groupId>
-				<artifactId>libraries-bom</artifactId>
-				<version>26.54.0</version> <!-- Versão estável recente -->
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-			<dependency>
-				<groupId>com.google.cloud</groupId>
 				<artifactId>spring-cloud-gcp-dependencies</artifactId>
-				<version>8.0.2</version>
+				<version>${spring-cloud-gcp.version}</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>

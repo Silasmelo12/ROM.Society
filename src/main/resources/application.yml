@@ -1,15 +1,15 @@
 server:
-  port: 8000
+  port: 8080
 
 spring:
   cloud:
     gcp:
-      project-id: project-718a7c91-2a2b-47fa-acf
       sql:
-        database-name: rom_society
-        instance-connection-name: sproject-718a7c91-2a2b-47fa-acf:us-central1:romsociety
+        enabled: false # Desativa a auto-configuração do SQL do Google
       storage:
+        enabled: true
         bucket: rom_society
+
 
   threads:
     virtual:
