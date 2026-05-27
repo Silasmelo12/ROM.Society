@@ -19,7 +19,6 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
-//@Version
 public class Event {
 
     @Id
@@ -50,7 +49,7 @@ public class Event {
     @CollectionTable(name = "event_allowed_plans", joinColumns = @JoinColumn(name = "event_id"))
     @Enumerated(EnumType.STRING)
     @Column(name = "plan_name", nullable = false)
-    private Set<Plan> allowedPlans= new HashSet<>();
+    private Set<Plan> allowedPlans = new HashSet<>();
 
     @Column(nullable = false)
     private String image;
@@ -69,9 +68,7 @@ public class Event {
     @Column(nullable = false)
     private Boolean active;
 
-    //@Version
-    //private Long version;
-
-
+    @Version
+    private Integer version;
 
 }
