@@ -1,6 +1,5 @@
 package concept.com.example.club.core.event.dto;
 
-import concept.com.example.club.core.user.enumeration.Plan;
 import lombok.Data;
 
 import java.time.LocalDateTime;

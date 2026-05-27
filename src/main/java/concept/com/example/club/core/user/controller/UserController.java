@@ -12,6 +12,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -25,32 +26,33 @@ public class UserController {
     @PreAuthorize("hasRole('ADMIN')") // Somente usuários com ROLE_ADMIN podem acessar esse endpoint
     @GetMapping
     public ResponseEntity<Page<UserResponseDTO>> findAll(
-            @PageableDefault(page = 0, size = 10) Pageable page){
+            @PageableDefault(page = 0, size = 10) Pageable page) {
         Page<UserResponseDTO> users = userService.findAll(page);
         return ResponseEntity.status(HttpStatus.OK).body(users);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{id}")
-    public ResponseEntity<UserResponseDetailDTO> findById(@PathVariable String id){
+    public ResponseEntity<UserResponseDetailDTO> findById(@PathVariable String id) {
         return ResponseEntity.status(HttpStatus.OK).body(userService.findById(id));
     }
 
     @GetMapping("/me")
-    public ResponseEntity<UserResponseDetailDTO> findById(){
-        return ResponseEntity.status(HttpStatus.OK).body(userService.findByMe());
+    public ResponseEntity<UserResponseDetailDTO> findById() {
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        return ResponseEntity.status(HttpStatus.OK).body(userService.findByMe(userEmail));
     }
 
     @PreAuthorize("hasRole('ADMIN') or #id == authentication.principal.id")
     @PutMapping("/{id}")
-    public ResponseEntity<UserResponseDTO> update(@PathVariable String id, @Valid 
-                                                  @RequestBody UserUpdateRequestDTO dto){
-        return ResponseEntity.status(HttpStatus.OK).body(userService.update(id,dto));
+    public ResponseEntity<UserResponseDTO> update(@PathVariable String id,
+            @Valid @RequestBody UserUpdateRequestDTO dto) {
+        return ResponseEntity.status(HttpStatus.OK).body(userService.update(id, dto));
     }
 
     @PreAuthorize("hasRole('ADMIN') or #id == authentication.principal.id")
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable String id){
+    public ResponseEntity<Void> delete(@PathVariable String id) {
         userService.delete(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
