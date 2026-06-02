@@ -15,9 +15,9 @@ import concept.com.example.club.core.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -32,6 +32,7 @@ public class UserService {
     private final PreferenceRepository preferenceRepository;
     private final PasswordEncoder passwordEncoder;
 
+    @Transactional
     public UserResponseDTO create(UserCreateRequestDTO dto) {
         User user = userMapper.toUser(dto);
         user.setActive(true);
