@@ -10,6 +10,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -20,21 +21,23 @@ public class RegistrationController {
     private final RegistrationService registrationService;
 
     @PostMapping("/events/{eventID}/register")
-    public ResponseEntity<RegistrationResponseDTO> register(@Valid @PathVariable String eventID){
-        return ResponseEntity.status(HttpStatus.CREATED).body(registrationService.registerUserToEvent(eventID));
+    public ResponseEntity<RegistrationResponseDTO> register(@Valid @PathVariable String eventID) {
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(registrationService.registerUserToEvent(eventID, userEmail));
     }
 
     @PreAuthorize("hasRole('ADMIN') or hasRole('SUPERADMIN')")
     @GetMapping("/events/{eventID}/registrations")
     public ResponseEntity<Page<RegistrationResponseDTO>> findAll(
-            @PageableDefault(page = 0, size = 10)Pageable pageable){
+            @PageableDefault(page = 0, size = 10) Pageable pageable) {
         Page<RegistrationResponseDTO> responseDTOS = registrationService.findAll(pageable);
         return new ResponseEntity<>(responseDTOS, HttpStatus.OK);
     }
 
     @GetMapping("/registrations/me")
     public ResponseEntity<Page<RegistrationResponseDTO>> findMyRegistrations(
-            @PageableDefault(page = 0, size = 10)Pageable pageable){
+            @PageableDefault(page = 0, size = 10) Pageable pageable) {
         Page<RegistrationResponseDTO> responseDTOS = registrationService.findMyRegistrations(pageable);
         return new ResponseEntity<>(responseDTOS, HttpStatus.OK);
     }

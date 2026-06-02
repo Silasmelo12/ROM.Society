@@ -5,13 +5,15 @@ import concept.com.example.club.core.user.model.User;
 import concept.com.example.club.core.registration.enumeration.RegistrationStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
 @Entity
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "registrations")
@@ -32,10 +34,9 @@ public class Registration {
     @Column(nullable = false, updatable = false)
     private LocalDateTime registrationDate;
 
-    //receber uma mensagem do porque da desistencia do evento
+    // receber uma mensagem do porque da desistencia do evento
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private RegistrationStatus status;
-
 
 }

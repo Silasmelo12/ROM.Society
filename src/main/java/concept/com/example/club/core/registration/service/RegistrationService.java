@@ -36,24 +36,23 @@ public class RegistrationService {
     private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(RegistrationService.class);
 
     @Transactional
-    public RegistrationResponseDTO registerUserToEvent(@Valid String eventId) {
-        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+    public RegistrationResponseDTO registerUserToEvent(@Valid String eventId, String userEmail) {
 
-        User userLogado = userRepository.findByEmail(userEmail).
-                orElseThrow(()->new UserNotFoundException("Usuário não encontrado no token."));
+        User userLogado = userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new UserNotFoundException("Usuário não encontrado no token."));
 
         Event event = eventRepository.findByIdAndActiveTrue(eventId)
-                .orElseThrow(()->new EventNotFoundException("Evento não encontrado."));
+                .orElseThrow(() -> new EventNotFoundException("Evento não encontrado."));
 
-        validarAcessoAoEvento(userLogado,event);
+        validarAcessoAoEvento(userLogado, event);
 
-        //verifica se o user já está incrito no evento
-        if(registrationRepository.existsByUserIdAndEventId(userLogado.getId(), event.getId())){
+        // verifica se o user já está incrito no evento
+        if (registrationRepository.existsByUserIdAndEventId(userLogado.getId(), event.getId())) {
             throw new RuntimeException("Usuário já está inscrito no evento");
         }
 
         // verifica se há vagas disponíveis
-        if(event.getAvailableSpots()<=0){
+        if (event.getAvailableSpots() <= 0) {
             throw new RuntimeException("Não há mais vaga no evento.");
         }
 
@@ -63,17 +62,18 @@ public class RegistrationService {
         registration.setEvent(event);
         registration.setStatus(RegistrationStatus.REGISTERED);
 
-        event.setAvailableSpots(event.getAvailableSpots()-1);
+        event.setAvailableSpots(event.getAvailableSpots() - 1);
         eventRepository.save(event);
         emailService.sendRegistrationConfirmation(userLogado.getEmail(), userLogado.getName(), event.getTitle());
 
-        RegistrationResponseDTO registrationResponseDTO = registrationMapper.toRegistrationResponseDTO(registrationRepository.save(registration));
+        RegistrationResponseDTO registrationResponseDTO = registrationMapper
+                .toRegistrationResponseDTO(registrationRepository.save(registration));
         registrationResponseDTO.setEventId(event.getId());
         registrationResponseDTO.setUserId(userLogado.getId());
         return registrationResponseDTO;
     }
 
-    public Page<RegistrationResponseDTO> findAll(Pageable pageable){
+    public Page<RegistrationResponseDTO> findAll(Pageable pageable) {
 
         Page<Registration> registrationsPage = registrationRepository.findAll(pageable);
         return registrationsPage.map(registration -> registrationMapper.toRegistrationResponseDTO(registration));
@@ -91,7 +91,8 @@ public class RegistrationService {
     }
 
     public void validarAcessoAoEvento(User user, Event event) {
-        // A trava de segurança exata: O plano do usuário está na lista VIP deste evento?
+        // A trava de segurança exata: O plano do usuário está na lista VIP deste
+        // evento?
         if (!event.getAllowedPlans().contains(user.getPlan())) {
             log.warn("Tentativa de acesso negada. O plano {} não tem permissão para o evento {}.",
                     user.getPlan(), event.getAllowedPlans());
@@ -122,7 +123,7 @@ public class RegistrationService {
 
         // 4. Atualiza o status e devolve a vaga para o evento
         registration.setStatus(RegistrationStatus.CANCELLED);
-        
+
         Event event = registration.getEvent();
         event.setAvailableSpots(event.getAvailableSpots() + 1);
         eventRepository.save(event);
