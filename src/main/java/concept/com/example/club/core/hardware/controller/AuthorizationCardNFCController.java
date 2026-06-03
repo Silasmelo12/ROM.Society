@@ -4,6 +4,7 @@ import concept.com.example.club.core.checkin.service.CheckinService;
 import concept.com.example.club.core.hardware.service.DeduplicacaoService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,11 +12,11 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/v1/totem/checkin")
 public class AuthorizationCardNFCController {
-    //private final EvolutionApiService evolutionApiService;
     private final Logger log = LoggerFactory.getLogger(AuthorizationCardNFCController.class);
     private final DeduplicacaoService deduplicacaoService;
     // Use uma constante ou traga do application.properties com @Value("${totem.api.key}")
-    private final String TOTEM_SECRET_KEY = "ROM-CONCEPT-TOTEM-SECURE-KEY-2026";
+    @Value("${totem.api.key}")
+    private String TOTEM_SECRET_KEY;// = "ROM-CONCEPT-TOTEM-SECURE-KEY-2026";
     private final CheckinService checkinService;
 
     public AuthorizationCardNFCController(DeduplicacaoService deduplicacaoService, CheckinService checkinService) {
