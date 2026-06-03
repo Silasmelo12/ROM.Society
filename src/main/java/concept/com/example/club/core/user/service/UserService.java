@@ -6,6 +6,7 @@ import concept.com.example.club.core.user.dto.UserUpdateRequestDTO;
 import concept.com.example.club.core.user.dto.UserResponseDTO;
 import concept.com.example.club.core.user.dto.UserResponseDetailDTO;
 import concept.com.example.club.common.exception.UserNotFoundException;
+import concept.com.example.club.core.user.enumeration.Plan;
 import concept.com.example.club.core.user.mapper.UserMapper;
 import concept.com.example.club.core.user.model.Hobby;
 import concept.com.example.club.core.user.model.Preference;
@@ -18,12 +19,14 @@ import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -35,11 +38,18 @@ public class UserService {
     private final PreferenceRepository preferenceRepository;
     private final PasswordEncoder passwordEncoder;
 
+    //planos e cada role pode criar
+    private static final Set<Plan> PLANOS_CONCIERGE = Set.of(Plan.GOLD, Plan.BLACK, Plan.INFINITE);
+    private static final Set<Plan> PLANOS_ADMIN = Set.of(Plan.CONCIERGE,Plan.BARMAN);
+    private static final Set<Plan> PLANOS_SUPERADMIN = Set.of(Plan.ADMIN);
+
     //adicionar variavel de log
     private static final Logger log = org.slf4j.LoggerFactory.getLogger(UserService.class);
 
+    public UserResponseDTO create(UserCreateRequestDTO dto, Authentication authentication){
 
-    public UserResponseDTO create(UserCreateRequestDTO dto){
+
+
         User user = userMapper.toUser(dto);
         user.setActive(true);
         user.setCreatedAt(LocalDateTime.now());
@@ -83,6 +93,9 @@ public class UserService {
         return userMapper.toUserResponseDTO(userRepository.save(user));
     }
 
+    private void validarPlanoPorRole(Plan planoSolicitado, Authentication authentication){
+
+    }
     public UserResponseDetailDTO findById(String id){
 
         return userMapper.toUserResponseDetailDTO(userRepository.findById(id).orElseThrow(
