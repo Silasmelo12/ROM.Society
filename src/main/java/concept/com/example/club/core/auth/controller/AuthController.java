@@ -29,7 +29,6 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
     private final TokenService tokenService;
     private final UserService userService;
-    Logger logger = LoggerFactory.getLogger(AuthController.class);
 
     public AuthController(AuthenticationManager authenticationManager, TokenService tokenService, UserService userService) {
         this.authenticationManager = authenticationManager;
@@ -40,7 +39,6 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDTO> login(@RequestBody AuthenticationDTO data) {
 
-        logger.info("senha: "+data.password());
         var usernamePassword = new UsernamePasswordAuthenticationToken(data.email(), data.password());
 
         Authentication auth = this.authenticationManager.authenticate(usernamePassword);
