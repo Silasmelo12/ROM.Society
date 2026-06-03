@@ -48,3 +48,7 @@ api:
 resend:
   api:
     key: ${RESEND_API_KEY} #"re_dbLMPUFr_E3yRszL9VnwNyDWx6KYqce8Z"
+
+totem:
+  api:
+    key: ${TOTEM_API_KEY}
