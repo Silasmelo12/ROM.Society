@@ -74,4 +74,14 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         );
         return new ResponseEntity<>(response,HttpStatus.UNAUTHORIZED);
     }
+
+    @ExceptionHandler(PlanNotAllowedException.class)
+    public ResponseEntity<ExceptionResponse> handlerPlanNotAllowed(PlanNotAllowedException ex, WebRequest request) {
+        ExceptionResponse response = new ExceptionResponse(
+                new Date(),
+                ex.getMessage(),
+                request.getDescription(false)
+        );
+        return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
+    }
 }

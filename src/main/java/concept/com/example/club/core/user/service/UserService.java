@@ -1,11 +1,13 @@
 package concept.com.example.club.core.user.service;
 
 
+import concept.com.example.club.common.exception.PlanNotAllowedException;
 import concept.com.example.club.core.user.dto.UserCreateRequestDTO;
 import concept.com.example.club.core.user.dto.UserUpdateRequestDTO;
 import concept.com.example.club.core.user.dto.UserResponseDTO;
 import concept.com.example.club.core.user.dto.UserResponseDetailDTO;
 import concept.com.example.club.common.exception.UserNotFoundException;
+import concept.com.example.club.core.user.enumeration.Plan;
 import concept.com.example.club.core.user.mapper.UserMapper;
 import concept.com.example.club.core.user.model.Hobby;
 import concept.com.example.club.core.user.model.Preference;
@@ -18,12 +20,14 @@ import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -37,13 +41,21 @@ public class UserService {
 
     //adicionar variavel de log
     private static final Logger log = org.slf4j.LoggerFactory.getLogger(UserService.class);
+    private static final Set<Plan> PLANOS_CONCIERGE = Set.of(Plan.GOLD, Plan.BLACK, Plan.INFINITE);
+    private static final Set<Plan> PLANOS_ADMIN = Set.of(Plan.CONCIERGE, Plan.BARMAN);
+    private static final Set<Plan> PLANOS_SUPERADMIN = Set.of(Plan.ADMIN);
 
 
-    public UserResponseDTO create(UserCreateRequestDTO dto){
+
+    public UserResponseDTO create(UserCreateRequestDTO dto, Authentication authentication){
+
+        validarPlanoPorRole(dto.getPlan(), authentication);
+
         User user = userMapper.toUser(dto);
         user.setActive(true);
         user.setCreatedAt(LocalDateTime.now());
         user.setUpdatedAt(LocalDateTime.now());
+
         List<Hobby> hobbiesExisteds = hobbyRepository.findByNameIn(dto.getHobbies());
 
         for (Hobby hobby:hobbiesExisteds){
@@ -81,6 +93,31 @@ public class UserService {
         String encryptedPassword = passwordEncoder.encode(dto.getPassword());
         user.setPassword(encryptedPassword);
         return userMapper.toUserResponseDTO(userRepository.save(user));
+    }
+
+    private void validarPlanoPorRole(Plan planoSolicitado, Authentication authentication) {
+        boolean isConcierge = authentication.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_CONCIERGE"));
+        boolean isAdmin = authentication.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+        boolean isSuperAdmin = authentication.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_SUPERADMIN"));
+
+        if (isConcierge && !PLANOS_CONCIERGE.contains(planoSolicitado)) {
+            throw new PlanNotAllowedException(
+                    "CONCIERGE só pode criar usuários com plano GOLD, BLACK ou INFINITE."
+            );
+        }
+        if (isAdmin && !PLANOS_ADMIN.contains(planoSolicitado)) {
+            throw new PlanNotAllowedException(
+                    "ADMIN só pode criar usuários com plano CONCIERGE ou BARMAN."
+            );
+        }
+        if (isSuperAdmin && !PLANOS_SUPERADMIN.contains(planoSolicitado)) {
+            throw new PlanNotAllowedException(
+                    "SUPERADMIN só pode criar usuários com plano ADMIN."
+            );
+        }
     }
 
     public UserResponseDetailDTO findById(String id){
