@@ -48,8 +48,4 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.OK).body(new LoginResponseDTO(token));
     }
 
-    @PostMapping("/register")
-    public ResponseEntity<UserResponseDTO> create(@Valid @RequestBody UserCreateRequestDTO dto){
-        return ResponseEntity.status(HttpStatus.CREATED).body(userService.create(dto));
-    }
 }
