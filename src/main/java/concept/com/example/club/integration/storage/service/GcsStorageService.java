@@ -1,4 +1,4 @@
-package concept.com.example.club.integration.storage.Service;
+package concept.com.example.club.integration.storage.service;
 
 import com.google.cloud.storage.BlobId;
 import com.google.cloud.storage.BlobInfo;
