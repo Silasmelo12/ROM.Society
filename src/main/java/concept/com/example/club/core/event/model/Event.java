@@ -2,9 +2,7 @@ package concept.com.example.club.core.event.model;
 
 import concept.com.example.club.core.user.enumeration.Plan;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -15,16 +13,22 @@ import java.util.Set;
 
 @Entity
 @Table(name = "events")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@ToString(exclude = "allowedPlans")
 //@Version
 public class Event {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
+
+    @Version
+    private Long version;
 
     @Column(nullable = false)
     private String title;
@@ -68,7 +72,4 @@ public class Event {
 
     @Column(nullable = false)
     private Boolean active;
-
-    //@Version
-    //private Long version;
 }
