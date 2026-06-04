@@ -1,0 +1,22 @@
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5433/concept
+    username: postgres
+    password: postgres
+
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    baseline-version: 0
+    locations: classpath:db/migration
+    url: jdbc:postgresql://localhost:5433/concept
+    user: postgres
+    password: postgres
+    schemas: public
+
+  jpa:
+    # MUDE DE false PARA true:
+    defer-datasource-initialization: true
+    hibernate:
+      ddl-auto: validate

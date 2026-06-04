@@ -5,11 +5,10 @@ spring:
   cloud:
     gcp:
       sql:
-        enabled: false # Desativa a auto-configuração do SQL do Google
+        enabled: false
       storage:
         enabled: true
         bucket: rom_society
-
 
   threads:
     virtual:
@@ -17,37 +16,27 @@ spring:
 
   application:
     name: Club-Rom-Concept
-  datasource:
-    driver-class-name: org.postgresql.Driver
-    #url: jdbc:postgresql://localhost:5432/concept?useTimezone=true&serverTimezone=UTC
-    url: jdbc:postgresql://localhost:5433/concept
-    username: postgres
-    password: postgres
+
   jpa:
+    defer-datasource-initialization: true
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
-      ddl-auto: update
+      ddl-auto: validate
     properties:
       hibernate:
     show-sql: true
 
-# Tradução do seu EVOLUTION_URL, AUTHENTICATION_API_KEY e NOME_INSTANCIA
-# O Java vai ler isso aqui para montar a requisição HTTP
-#evolution:
-#  api:
-#    url: http://localhost:8080
-#    key: "12345" # Tem que ser a mesma do AUTHENTICATION_API_KEY ali de cima!
-#    instance-name: "Tetrix_Bot"
+  flyway:
+    enabled: true
 
-# Chave secreta para assinar os tokens JWT (Mantenha em sigilo!)
 api:
   security:
     token:
-      secret: ${JWT_SECRET} #${JWT_SECRET:bsjçsngpoansgrçJNSEGnSHbJpJYRiJYuJYReJRSnSRGpoARGhnq´0aioAREGçnerl.mnbaeW651tj3216841651jG@#$%8sry15k,kmondkfoalijrnhça5tj6221}
+      secret: ${JWT_SECRET}
 
 resend:
   api:
-    key: ${RESEND_API_KEY} #"re_dbLMPUFr_E3yRszL9VnwNyDWx6KYqce8Z"
+    key: ${RESEND_API_KEY}
 
 totem:
   api:
