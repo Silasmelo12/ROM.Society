@@ -68,6 +68,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(userService.findById(id));
     }
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/me")
     public ResponseEntity<UserResponseDetailDTO> findById(){
         return ResponseEntity.status(HttpStatus.OK).body(userService.findByMe());

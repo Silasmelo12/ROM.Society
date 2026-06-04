@@ -4,21 +4,23 @@ import concept.com.example.club.core.event.model.Event;
 import concept.com.example.club.core.user.model.User;
 import concept.com.example.club.core.registration.enumeration.RegistrationStatus;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Entity
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "registrations")
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@ToString(exclude = {"user", "event"})
 public class Registration {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
+    @EqualsAndHashCode.Include
     private String id;
 
     @ManyToOne

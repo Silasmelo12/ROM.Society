@@ -17,7 +17,6 @@ import concept.com.example.club.core.user.repository.PreferenceRepository;
 import concept.com.example.club.core.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
@@ -166,8 +165,6 @@ public class UserService {
         User userLogado = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new UserNotFoundException("Usuário não encontrado"));
 
-        return userMapper.toUserResponseDetailDTO(userRepository.findById(userLogado.getId()).orElseThrow(
-                () -> new UserNotFoundException("User com id: "+userLogado.getId()+" não foi encontrado.")
-        ));
+        return userMapper.toUserResponseDetailDTO(userLogado);
     }
 }
