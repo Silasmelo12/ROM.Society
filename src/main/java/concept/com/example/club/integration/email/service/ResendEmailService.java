@@ -1,4 +1,4 @@
-package concept.com.example.club.integration.email.ResendEmailService;
+package concept.com.example.club.integration.email.service;
 
 import com.resend.Resend;
 import com.resend.core.exception.ResendException;

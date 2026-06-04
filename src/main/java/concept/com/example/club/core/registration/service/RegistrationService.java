@@ -12,14 +12,19 @@ import concept.com.example.club.core.user.repository.UserRepository;
 import concept.com.example.club.core.event.model.Event;
 import concept.com.example.club.core.user.model.User;
 import concept.com.example.club.core.event.repository.EventRepository;
-import concept.com.example.club.integration.email.ResendEmailService.ResendEmailService;
-import jakarta.transaction.Transactional;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import concept.com.example.club.common.exception.AlreadyRegisteredException;
+import concept.com.example.club.common.exception.ForbiddenAccessException;
+import concept.com.example.club.common.exception.NoAvailableSpotsException;
+import concept.com.example.club.common.exception.RegistrationNotFoundException;
+import concept.com.example.club.integration.email.service.ResendEmailService;
+import org.springframework.transaction.annotation.Transactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.time.LocalDateTime;
 
@@ -33,10 +38,9 @@ public class RegistrationService {
     private final UserRepository userRepository;
     private final ResendEmailService emailService;
 
-    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(RegistrationService.class);
-
+    private static final Logger log = LoggerFactory.getLogger(RegistrationService.class);
     @Transactional
-    public RegistrationResponseDTO registerUserToEvent(@Valid String eventId) {
+    public RegistrationResponseDTO registerUserToEvent(String eventId) {
         String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
 
         User userLogado = userRepository.findByEmail(userEmail).
@@ -49,12 +53,12 @@ public class RegistrationService {
 
         //verifica se o user já está incrito no evento
         if(registrationRepository.existsByUserIdAndEventId(userLogado.getId(), event.getId())){
-            throw new RuntimeException("Usuário já está inscrito no evento");
+            throw new AlreadyRegisteredException("Usuário já está inscrito no evento");
         }
 
         // verifica se há vagas disponíveis
         if(event.getAvailableSpots()<=0){
-            throw new RuntimeException("Não há mais vaga no evento.");
+            throw new NoAvailableSpotsException("Não há mais vaga no evento.");
         }
 
         Registration registration = new Registration();
@@ -108,16 +112,16 @@ public class RegistrationService {
 
         // 1. Busca a inscrição
         Registration registration = registrationRepository.findById(registrationId)
-                .orElseThrow(() -> new RuntimeException("Inscrição não encontrada."));
+                .orElseThrow(() -> new RegistrationNotFoundException("Inscrição não encontrada."));
 
         // 2. Trava de segurança: garantir que só o dono da inscrição pode cancelar
         if (!registration.getUser().getId().equals(userLogado.getId())) {
-            throw new RuntimeException("Acesso negado: Você não pode cancelar uma inscrição que não é sua.");
+            throw new ForbiddenAccessException("Acesso negado: Você não pode cancelar uma inscrição que não é sua.");
         }
 
         // 3. Valida se já foi cancelada
         if (registration.getStatus() == RegistrationStatus.CANCELLED) {
-            throw new RuntimeException("Esta inscrição já encontra-se cancelada.");
+            throw new AlreadyRegisteredException("Esta inscrição já encontra-se cancelada.");
         }
 
         // 4. Atualiza o status e devolve a vaga para o evento
