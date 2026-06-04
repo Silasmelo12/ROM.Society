@@ -1,6 +1,7 @@
 package concept.com.example.club.common.exception.handler;
 
 import concept.com.example.club.common.exception.*;
+import jakarta.persistence.OptimisticLockException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -83,5 +84,45 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 request.getDescription(false)
         );
         return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler(AlreadyRegisteredException.class)
+    public ResponseEntity<ExceptionResponse> handlerAlreadyRegistered(AlreadyRegisteredException ex, WebRequest request) {
+        ExceptionResponse response = new ExceptionResponse(
+                new Date(),
+                ex.getMessage(),
+                request.getDescription(false)
+        );
+        return new ResponseEntity<>(response, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(NoAvailableSpotsException.class)
+    public ResponseEntity<ExceptionResponse> handlerNoAvailableSpots(NoAvailableSpotsException ex, WebRequest request) {
+        ExceptionResponse response = new ExceptionResponse(
+                new Date(),
+                ex.getMessage(),
+                request.getDescription(false)
+        );
+        return new ResponseEntity<>(response, HttpStatus.UNPROCESSABLE_ENTITY);
+    }
+
+    @ExceptionHandler(ForbiddenAccessException.class)
+    public ResponseEntity<ExceptionResponse> handlerForbiddenAccess(ForbiddenAccessException ex, WebRequest request) {
+        ExceptionResponse response = new ExceptionResponse(
+                new Date(),
+                ex.getMessage(),
+                request.getDescription(false)
+        );
+        return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler(OptimisticLockException.class)
+    public ResponseEntity<ExceptionResponse> handlerOptimisticLock(OptimisticLockException ex, WebRequest request) {
+        ExceptionResponse response = new ExceptionResponse(
+                new Date(),
+                "O evento foi atualizado por outra requisição. Tente novamente.",
+                request.getDescription(false)
+        );
+        return new ResponseEntity<>(response, HttpStatus.CONFLICT);
     }
 }
