@@ -1,6 +1,7 @@
 package concept.com.example.club.core.checkin.model;
 
 import concept.com.example.club.core.checkin.enumeration.StatusCheckin;
+import concept.com.example.club.core.salon.model.Salon;
 import concept.com.example.club.core.user.model.User;
 import jakarta.persistence.*;
 import lombok.*;
@@ -34,4 +35,8 @@ public class Checkin {
 
     @Enumerated(EnumType.STRING)
     private StatusCheckin status;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "salon_id")
+    private Salon salon;
 }
