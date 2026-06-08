@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 public interface UserMapper {
 
 
-    //@Mapping(target ="id",ignore = true)
+    //@Mapping(target ="userId",ignore = true)
     @Mapping(target = "hobbies", ignore = true)
     @Mapping(target = "preferences", ignore = true)
     UserCreateRequestDTO toUserCreateRequestDTO(User user);

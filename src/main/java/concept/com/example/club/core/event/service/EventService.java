@@ -55,7 +55,7 @@ public class EventService {
     public EventResponseDTO update(EventUpdateRequestDTO dto, String id) {
         log.info("Evento consultado: {}", id);
         Event event = eventRepository.findByIdAndActiveTrue(id)
-                .orElseThrow(() -> new EventNotFoundException("Evento não encontrado com o id: " + id));
+                .orElseThrow(() -> new EventNotFoundException("Evento não encontrado com o userId: " + id));
 
         int newAvailableSpots = event.getAvailableSpots() + (dto.getCapacity() - event.getCapacity());
         if (newAvailableSpots < 0) {
@@ -87,7 +87,7 @@ public class EventService {
 
     public EventResponseDTO findById(String id) {
         Event response = eventRepository.findByIdAndActiveTrue(id).orElseThrow(
-                () -> new EventNotFoundException("Evento não encontrado para este id."));
+                () -> new EventNotFoundException("Evento não encontrado para este userId."));
         return eventMapper.toEventResponseDTO(response);
     }
 
@@ -97,7 +97,7 @@ public class EventService {
                 .orElseThrow(() -> new UserNotFoundException("Usuário não encontrado no token."));
 
         Event event = eventRepository.findByIdAndActiveTrue(id)
-                .orElseThrow(() -> new EventNotFoundException("Evento não encontrado para este id."));
+                .orElseThrow(() -> new EventNotFoundException("Evento não encontrado para este userId."));
 
         if (!event.getAllowedPlans().contains(userLogado.getPlan())) {
             throw new PlanNotAllowedException("O seu plano atual não dá acesso a este evento exclusivo.");
@@ -109,7 +109,7 @@ public class EventService {
     @Transactional
     public void delete(String id) {
         Event event = eventRepository.findByIdAndActiveTrue(id).orElseThrow(
-                () -> new EventNotFoundException("Evento não encontrado com o id: " + id)); // Verifica se o evento
+                () -> new EventNotFoundException("Evento não encontrado com o userId: " + id)); // Verifica se o evento
                                                                                             // existe antes de tentar
                                                                                             // deletar
         event.setActive(false);

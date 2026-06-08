@@ -13,5 +13,6 @@ public interface CheckinRepository extends JpaRepository<Checkin,String> {
 
 
     Page<Checkin> findAll(Pageable pageable);
+    Page<Checkin> findBySalonId(String salonId, Pageable pageable);
 
 }

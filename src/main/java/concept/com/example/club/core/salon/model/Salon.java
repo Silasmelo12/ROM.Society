@@ -13,7 +13,7 @@ import lombok.Setter;
 @Table
 public class Salon {
     @Id
-    private Long id;
+    private String id;
 
     @Column(nullable = false, unique = true)
     private String totemIdentifier;

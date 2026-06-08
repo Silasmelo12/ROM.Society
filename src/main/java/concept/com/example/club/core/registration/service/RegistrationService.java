@@ -133,4 +133,10 @@ public class RegistrationService {
 
         return registrationMapper.toRegistrationResponseDTO(registrationRepository.save(registration));
     }
+
+    public Page<RegistrationResponseDTO> findAllByEventId(String eventID, Pageable pageable) {
+
+        Page<Registration> page = registrationRepository.findAllByEventId(eventID,pageable);
+        return page.map(registration -> registrationMapper.toRegistrationResponseDTO(registration));
+    }
 }

@@ -63,7 +63,7 @@ public class UserController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping("/{id}")
+    @GetMapping("/{userId}")
     public ResponseEntity<UserResponseDetailDTO> findById(@PathVariable String id){
         return ResponseEntity.status(HttpStatus.OK).body(userService.findById(id));
     }
@@ -75,14 +75,14 @@ public class UserController {
     }
 
     @PreAuthorize("hasRole('ADMIN') or #id == authentication.principal.id")
-    @PutMapping("/{id}")
+    @PutMapping("/{userId}")
     public ResponseEntity<UserResponseDTO> update(@PathVariable String id, @Valid 
                                                   @RequestBody UserUpdateRequestDTO dto){
         return ResponseEntity.status(HttpStatus.OK).body(userService.update(id,dto));
     }
 
-    @PreAuthorize("hasRole('ADMIN') or #id == authentication.principal.id")
-    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN') or #userId == authentication.principal.userId")
+    @DeleteMapping("/{userId}")
     public ResponseEntity<Void> delete(@PathVariable String id){
         userService.delete(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();

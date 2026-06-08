@@ -49,4 +49,6 @@ public class UserCreateRequestDTO {
 
     private Boolean marketingOptIn;
 
+    @NotNull(message = "O salão principal é obrigatório")
+    private String homeSalonId;
 }

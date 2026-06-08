@@ -43,7 +43,7 @@ public class EventController {
 
         EventResponseDTO eventResponseDTO = eventService.createEvent(dto, bannerImage);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
-                .path("/{id}")
+                .path("/{userId}")
                 .buildAndExpand(eventResponseDTO.getId())
                 .toUri();
         return ResponseEntity.created(location).body(eventResponseDTO);
@@ -66,19 +66,19 @@ public class EventController {
     }
 
     @PreAuthorize("hasRole('ADMIN') or hasRole('SUPERADMIN')")
-    @GetMapping("/{id}")
+    @GetMapping("/{userId}")
     public ResponseEntity<EventResponseDTO> findById(@PathVariable String id) {
         return ResponseEntity.ok(eventService.findById(id));
     }
 
     @PreAuthorize("isAuthenticated()")
-    @GetMapping("/me/{id}")
+    @GetMapping("/me/{userId}")
     public ResponseEntity<EventResponseDTO> findByIdAllowedForUser(@PathVariable String id) {
         return ResponseEntity.ok(eventService.findByIdAllowedForUser(id));
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @PutMapping("/{id}")
+    @PutMapping("/{userId}")
     public ResponseEntity<EventResponseDTO> update(@PathVariable String id,
             @Valid @RequestBody EventUpdateRequestDTO dto) {
         EventResponseDTO response = eventService.update(dto, id);
@@ -86,7 +86,7 @@ public class EventController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{userId}")
     public ResponseEntity<Void> delete(@PathVariable String id) {
         eventService.delete(id);
         return ResponseEntity.noContent().build();
