@@ -26,7 +26,11 @@ public class UserCreateRequestDTO {
     private LocalDate birthDate;
 
     @NotBlank(message = "Senha é obrigatória")
-    @Size(min = 6, message = "A senha deve ter pelo menos 6 caracteres")
+    @Size(min = 8, message = "A senha deve ter pelo menos 8 caracteres")
+    @Pattern(
+            regexp = "^(?=.*[A-Z])(?=.*\\d).+$",
+            message = "A senha deve conter pelo menos uma letra maiúscula e um número"
+    )
     private String password;
 
     @NotNull(message = "O plano deve ser selecionado")
@@ -47,6 +51,7 @@ public class UserCreateRequestDTO {
     @Valid
     private AddressRequestDTO addressRequestDTO;
 
+    @NotNull(message = "É necessário informar se o usuário optou por receber marketing")
     private Boolean marketingOptIn;
 
     @NotNull(message = "O salão principal é obrigatório")

@@ -43,7 +43,7 @@ public class EventController {
 
         EventResponseDTO eventResponseDTO = eventService.createEvent(dto, bannerImage);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
-                .path("/{userId}")
+                .path("/{eventId}")
                 .buildAndExpand(eventResponseDTO.getId())
                 .toUri();
         return ResponseEntity.created(location).body(eventResponseDTO);
@@ -66,29 +66,29 @@ public class EventController {
     }
 
     @PreAuthorize("hasRole('ADMIN') or hasRole('SUPERADMIN')")
-    @GetMapping("/{userId}")
-    public ResponseEntity<EventResponseDTO> findById(@PathVariable String id) {
-        return ResponseEntity.ok(eventService.findById(id));
+    @GetMapping("/{eventId}")
+    public ResponseEntity<EventResponseDTO> findById(@PathVariable String eventId) {
+        return ResponseEntity.ok(eventService.findById(eventId));
     }
 
     @PreAuthorize("isAuthenticated()")
-    @GetMapping("/me/{userId}")
-    public ResponseEntity<EventResponseDTO> findByIdAllowedForUser(@PathVariable String id) {
-        return ResponseEntity.ok(eventService.findByIdAllowedForUser(id));
+    @GetMapping("/me/{eventId}")
+    public ResponseEntity<EventResponseDTO> findByIdAllowedForUser(@PathVariable String eventId) {
+        return ResponseEntity.ok(eventService.findByIdAllowedForUser(eventId));
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @PutMapping("/{userId}")
-    public ResponseEntity<EventResponseDTO> update(@PathVariable String id,
+    @PutMapping("/{eventId}")
+    public ResponseEntity<EventResponseDTO> update(@PathVariable String eventId,
             @Valid @RequestBody EventUpdateRequestDTO dto) {
-        EventResponseDTO response = eventService.update(dto, id);
+        EventResponseDTO response = eventService.update(dto, eventId);
         return ResponseEntity.ok(response);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @DeleteMapping("/{userId}")
-    public ResponseEntity<Void> delete(@PathVariable String id) {
-        eventService.delete(id);
+    @DeleteMapping("/{eventId}")
+    public ResponseEntity<Void> delete(@PathVariable String eventId) {
+        eventService.delete(eventId);
         return ResponseEntity.noContent().build();
     }
 

@@ -30,7 +30,7 @@ public class AuthorizationCardNFCController {
     @PostMapping
     public ResponseEntity<CheckinResponseDTO > authorizationByCard(@RequestBody TotemCheckinRequestDTO dto,
                                                       @RequestHeader(value = "X-Totem-Key", required = false) String apiKey,
-                                                      @RequestHeader(value = "X-Totem-Id", required = false) String totemId){
+                                                      @RequestHeader(value = "X-Totem-Id") String totemId){
 
         // 1. A Trava de Segurança M2M
         if (apiKey == null || !apiKey.equals(TOTEM_SECRET_KEY)) {

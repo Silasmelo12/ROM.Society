@@ -1,4 +1,4 @@
-package concept.com.example.club.integration.email.service;
+package concept.com.example.club.integration.resend.service;
 
 import com.resend.Resend;
 import com.resend.core.exception.ResendException;
@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.web.util.HtmlUtils;
 
 @Service
 @Slf4j
@@ -16,15 +17,22 @@ public class ResendEmailService {
     @Value("${resend.api.key}")
     private String apiKey;
 
+    private final Resend resend;
+
+    public ResendEmailService(Resend resend) {
+        this.resend = resend;
+    }
+
     @Async
     public void sendRegistrationConfirmation(String toEmail, String userName, String eventTitle) {
-        // Inicializa o cliente do Resend com a sua chave
-        Resend resend = new Resend(apiKey);
+
+        String safeName = HtmlUtils.htmlEscape(userName);
+        String safeTitle = HtmlUtils.htmlEscape(eventTitle);
 
         // O HTML amigável do seu e-mail
         String htmlBody = String.format(
                 "<h2>Olá, %s!</h2><p>Sua inscrição no evento <strong>%s</strong> foi confirmada com sucesso.</p><p>Prepare-se para uma experiência inesquecível na ROM.Concept.</p>",
-                userName, eventTitle
+                safeName, safeTitle
         );
 
         CreateEmailOptions params = CreateEmailOptions.builder()

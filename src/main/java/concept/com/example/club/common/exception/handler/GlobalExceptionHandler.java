@@ -2,6 +2,8 @@ package concept.com.example.club.common.exception.handler;
 
 import concept.com.example.club.common.exception.*;
 import jakarta.persistence.OptimisticLockException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -16,11 +18,16 @@ import java.util.Date;
 @RestController
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
+    private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ExceptionResponse> handleAllExceptions(Exception ex, WebRequest request) {
+        log.error("Erro inesperado: ",ex);
+
         ExceptionResponse response = new ExceptionResponse(
                 new Date(),
-                ex.getMessage(),
+                "Ocorreu um erro interno. Contate o suporte.",
                 request.getDescription(false)
         );
         return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -134,5 +141,15 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 request.getDescription(false)
         );
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(EmailAlreadyExistsException.class)
+    public ResponseEntity<ExceptionResponse> handlerEmailAlreadyExistsException(EmailAlreadyExistsException ex, WebRequest request){
+        ExceptionResponse response = new ExceptionResponse(
+                new Date(),
+                ex.getMessage(),
+                request.getDescription(false)
+        );
+        return new ResponseEntity<>(response, HttpStatus.CONFLICT);
     }
 }

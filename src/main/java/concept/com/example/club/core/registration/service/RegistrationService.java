@@ -21,7 +21,7 @@ import concept.com.example.club.common.exception.AlreadyRegisteredException;
 import concept.com.example.club.common.exception.ForbiddenAccessException;
 import concept.com.example.club.common.exception.NoAvailableSpotsException;
 import concept.com.example.club.common.exception.RegistrationNotFoundException;
-import concept.com.example.club.integration.email.service.ResendEmailService;
+import concept.com.example.club.integration.resend.service.ResendEmailService;
 import org.springframework.transaction.annotation.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

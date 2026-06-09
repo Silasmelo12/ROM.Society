@@ -35,11 +35,6 @@ public class EventService {
     private final UserRepository userRepository;
     private final GcsStorageService storageService;
 
-    public String saveImageStorageGoogle(MultipartFile bannerImage) {
-        String imageString = storageService.uploadBanner(bannerImage);
-        return imageString;
-    }
-
     @Transactional
     public EventResponseDTO createEvent(EventCreateRequestDTO dto, MultipartFile bannerImage) {
         String imageUrl = storageService.uploadBanner(bannerImage);

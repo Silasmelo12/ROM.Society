@@ -1,6 +1,7 @@
 package concept.com.example.club.core.user.service;
 
 
+import concept.com.example.club.common.exception.EmailAlreadyExistsException;
 import concept.com.example.club.common.exception.PlanNotAllowedException;
 import concept.com.example.club.common.exception.SalonNotFoundException;
 import concept.com.example.club.core.salon.model.Salon;
@@ -56,8 +57,6 @@ public class UserService {
 
         User user = userMapper.toUser(dto);
         user.setActive(true);
-        user.setCreatedAt(LocalDateTime.now());
-        user.setUpdatedAt(LocalDateTime.now());
 
         Salon salon = salonRepository.findById(dto.getHomeSalonId()).orElseThrow(
                 () -> new SalonNotFoundException("Salão não encontrado.")
@@ -100,6 +99,9 @@ public class UserService {
         String encryptedPassword = passwordEncoder.encode(dto.getPassword());
         user.setHomeSalon(salon);
         user.setPassword(encryptedPassword);
+        if (userRepository.existsByEmail(dto.getEmail())) {
+            throw new EmailAlreadyExistsException("Email já cadastrado.");
+        }
         return userMapper.toUserResponseDTO(userRepository.save(user));
     }
 
@@ -155,14 +157,12 @@ public class UserService {
 //        }
 
         userMapper.updateEntityFromDto(dto,user);
-        user.setUpdatedAt(LocalDateTime.now());
         return userMapper.toUserResponseDTO(userRepository.save(user));
     }
 
     public void delete(String id) {
         User user = userRepository.findById(id)
                 .orElseThrow(()->new UserNotFoundException("Usuário não encontrado com o userId: "+id));
-        user.setUpdatedAt(LocalDateTime.now());
         user.setActive(false);
         userRepository.save(user);
     }

@@ -81,10 +81,10 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(userService.update(id,dto));
     }
 
-    @PreAuthorize("hasRole('ADMIN') or #userId == authentication.principal.userId")
+    @PreAuthorize("hasRole('ADMIN') or #userId == authentication.principal.id")
     @DeleteMapping("/{userId}")
-    public ResponseEntity<Void> delete(@PathVariable String id){
-        userService.delete(id);
+    public ResponseEntity<Void> delete(@PathVariable String userId){
+        userService.delete(userId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

@@ -19,6 +19,7 @@ public class RegistrationController {
 
     private final RegistrationService registrationService;
 
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/events/{eventID}/register")
     public ResponseEntity<RegistrationResponseDTO> register(@Valid @PathVariable String eventID){
         return ResponseEntity.status(HttpStatus.CREATED).body(registrationService.registerUserToEvent(eventID));
@@ -33,6 +34,7 @@ public class RegistrationController {
         return new ResponseEntity<>(responseDTOS, HttpStatus.OK);
     }
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/registrations/me")
     public ResponseEntity<Page<RegistrationResponseDTO>> findMyRegistrations(
             @PageableDefault(page = 0, size = 10)Pageable pageable){
@@ -40,6 +42,7 @@ public class RegistrationController {
         return new ResponseEntity<>(responseDTOS, HttpStatus.OK);
     }
 
+    @PreAuthorize("isAuthenticated()")
     @PatchMapping("/registrations/{registrationId}/cancel")
     public ResponseEntity<RegistrationResponseDTO> cancelRegistration(@PathVariable String registrationId) {
         RegistrationResponseDTO response = registrationService.cancelRegistration(registrationId);
