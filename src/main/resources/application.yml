@@ -21,13 +21,13 @@ spring:
     defer-datasource-initialization: true
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
-      ddl-auto: validate
+      ddl-auto: create
     properties:
       hibernate:
 
 
   flyway:
-    enabled: true
+    enabled: false
 
 api:
   security:
