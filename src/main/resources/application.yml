@@ -1,5 +1,5 @@
 server:
-  port: 8081
+  port: 8080
 
 spring:
   profiles:
@@ -10,7 +10,7 @@ spring:
         enabled: false
       storage:
         enabled: true
-        bucket: rom_society
+        bucket: ${GCP_STORAGE_BUCKET}
 
   threads:
     virtual:
