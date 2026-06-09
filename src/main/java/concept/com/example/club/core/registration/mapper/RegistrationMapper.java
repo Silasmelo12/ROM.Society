@@ -11,8 +11,8 @@ public interface RegistrationMapper  {
 
     Registration toRegistration(RegistrationCreateRequestDTO dto);
 
-    @Mapping(source = "user.userId",target = "userId")
-    @Mapping(source = "event.userId",target = "eventId")
+    @Mapping(source = "user.id",target = "userId")
+    @Mapping(source = "event.id",target = "eventId")
     RegistrationResponseDTO toRegistrationResponseDTO(Registration registration);
 
 }
