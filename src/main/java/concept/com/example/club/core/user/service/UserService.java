@@ -1,7 +1,11 @@
 package concept.com.example.club.core.user.service;
 
 
+import concept.com.example.club.common.exception.EmailAlreadyExistsException;
 import concept.com.example.club.common.exception.PlanNotAllowedException;
+import concept.com.example.club.common.exception.SalonNotFoundException;
+import concept.com.example.club.core.salon.model.Salon;
+import concept.com.example.club.core.salon.repository.SalonRepository;
 import concept.com.example.club.core.user.dto.UserCreateRequestDTO;
 import concept.com.example.club.core.user.dto.UserUpdateRequestDTO;
 import concept.com.example.club.core.user.dto.UserResponseDTO;
@@ -37,6 +41,7 @@ public class UserService {
     private final HobbyRepository hobbyRepository;
     private final PreferenceRepository preferenceRepository;
     private final PasswordEncoder passwordEncoder;
+    private final SalonRepository salonRepository;
 
     //adicionar variavel de log
     private static final Logger log = org.slf4j.LoggerFactory.getLogger(UserService.class);
@@ -52,8 +57,10 @@ public class UserService {
 
         User user = userMapper.toUser(dto);
         user.setActive(true);
-        user.setCreatedAt(LocalDateTime.now());
-        user.setUpdatedAt(LocalDateTime.now());
+
+        Salon salon = salonRepository.findById(dto.getHomeSalonId()).orElseThrow(
+                () -> new SalonNotFoundException("Salão não encontrado.")
+        );
 
         List<Hobby> hobbiesExisteds = hobbyRepository.findByNameIn(dto.getHobbies());
 
@@ -90,7 +97,11 @@ public class UserService {
             }
         }
         String encryptedPassword = passwordEncoder.encode(dto.getPassword());
+        user.setHomeSalon(salon);
         user.setPassword(encryptedPassword);
+        if (userRepository.existsByEmail(dto.getEmail())) {
+            throw new EmailAlreadyExistsException("Email já cadastrado.");
+        }
         return userMapper.toUserResponseDTO(userRepository.save(user));
     }
 
@@ -122,7 +133,7 @@ public class UserService {
     public UserResponseDetailDTO findById(String id){
 
         return userMapper.toUserResponseDetailDTO(userRepository.findById(id).orElseThrow(
-                () -> new UserNotFoundException("User com id: "+id+" não foi encontrado.")
+                () -> new UserNotFoundException("User com userId: "+id+" não foi encontrado.")
         ));
     }
 
@@ -139,21 +150,19 @@ public class UserService {
 
     public UserResponseDTO update(String id, UserUpdateRequestDTO dto){
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new UserNotFoundException("User com id: "+id+" não foi encontrado."));
+                .orElseThrow(() -> new UserNotFoundException("User com userId: "+id+" não foi encontrado."));
 
 //        if(!user.getEmail().equals(dto.getEmail()) && userRepository.existsByEmail(dto.getEmail())){
 //            throw new RuntimeException("Email já cadastrado para outro usuário.");
 //        }
 
         userMapper.updateEntityFromDto(dto,user);
-        user.setUpdatedAt(LocalDateTime.now());
         return userMapper.toUserResponseDTO(userRepository.save(user));
     }
 
     public void delete(String id) {
         User user = userRepository.findById(id)
-                .orElseThrow(()->new UserNotFoundException("Usuário não encontrado com o id: "+id));
-        user.setUpdatedAt(LocalDateTime.now());
+                .orElseThrow(()->new UserNotFoundException("Usuário não encontrado com o userId: "+id));
         user.setActive(false);
         userRepository.save(user);
     }

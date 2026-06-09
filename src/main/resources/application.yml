@@ -24,7 +24,7 @@ spring:
       ddl-auto: validate
     properties:
       hibernate:
-    show-sql: true
+
 
   flyway:
     enabled: true

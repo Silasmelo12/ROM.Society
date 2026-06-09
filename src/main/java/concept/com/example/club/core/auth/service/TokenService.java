@@ -22,7 +22,6 @@ public class TokenService {
             return JWT.create()
                     .withIssuer("Rom Society")
                     .withSubject(user.getEmail())
-                    .withClaim("role",user.getPlan().name())
                     .withExpiresAt(genExpirationDate())
                     .sign(algorithm);
         } catch (JWTCreationException exception){

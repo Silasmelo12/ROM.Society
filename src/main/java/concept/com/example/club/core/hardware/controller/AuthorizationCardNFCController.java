@@ -1,6 +1,8 @@
 package concept.com.example.club.core.hardware.controller;
 
+import concept.com.example.club.core.checkin.dto.CheckinResponseDTO;
 import concept.com.example.club.core.checkin.service.CheckinService;
+import concept.com.example.club.core.hardware.dto.TotemCheckinRequestDTO;
 import concept.com.example.club.core.hardware.service.DeduplicacaoService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,25 +27,26 @@ public class AuthorizationCardNFCController {
         this.checkinService = checkinService;
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<String> authorizationByCard(@PathVariable String id,
-                                                      @RequestHeader(value = "X-Totem-Key", required = false) String apiKey){
+    @PostMapping
+    public ResponseEntity<CheckinResponseDTO > authorizationByCard(@RequestBody TotemCheckinRequestDTO dto,
+                                                      @RequestHeader(value = "X-Totem-Key", required = false) String apiKey,
+                                                      @RequestHeader(value = "X-Totem-Id") String totemId){
 
         // 1. A Trava de Segurança M2M
         if (apiKey == null || !apiKey.equals(TOTEM_SECRET_KEY)) {
             log.warn("Tentativa de acesso não autorizada na rota do Totem. IP não confiável.");
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Acesso Negado");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
-        if (deduplicacaoService.isDuplicada(id)){
+        if (deduplicacaoService.isDuplicada(dto.userId())){
             log.info("Requisição bloqueada por duplicidade (Anti-Spam).");
             return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS)
-                    .body("Requisição bloqueada por duplicidade (Anti-Spam).");
+                    .build();
         }
-        log.warn("Mensagem sendo enviada: {}", id);
-        checkinService.create(id);
-        //evolutionApiService.sendImageWhatsapp(id, "https://raw.githubusercontent.com/Silasmelo12/imagemAlan/refs/heads/main/Screenshot_16.png");
+        log.warn("Mensagem sendo enviada: {}", dto.userId());
+        CheckinResponseDTO checkinResponseDTO = checkinService.create(dto.userId(),totemId);
+        //evolutionApiService.sendImageWhatsapp(userId, "https://raw.githubusercontent.com/Silasmelo12/imagemAlan/refs/heads/main/Screenshot_16.png");
 
-        return ResponseEntity.status(HttpStatus.OK).body("Liberado");
+        return ResponseEntity.status(HttpStatus.OK).body(checkinResponseDTO);
     }
 }

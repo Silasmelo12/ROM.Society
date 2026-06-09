@@ -88,7 +88,7 @@ public class User implements UserDetails {
 
     // Relacionamento para indicar o salão principal do usuário
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "salon_id")
+    @JoinColumn(nullable = false, name = "salon_id")
     private Salon homeSalon;
 
     @ManyToOne

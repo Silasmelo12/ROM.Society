@@ -1,5 +1,6 @@
 package concept.com.example.club.core.salon.model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -12,7 +13,8 @@ import lombok.Setter;
 @Table
 public class Salon {
     @Id
-    private Long id;
+    private String id;
 
-    //TODO [Reverse Engineering] generate columns from DB
+    @Column(nullable = false, unique = true)
+    private String totemIdentifier;
 }
