@@ -26,10 +26,10 @@ public class OpenApiConfig {
                         .description("Documentação oficial da API do clube de luxo ROM.Concept. Inclui integrações de IoT (Totem NFC) e WebSockets.")
                         .contact(new Contact().name("Seu Nome").email("seuemail@romconcept.com")))
                 // Adiciona o botão de "Authorize" global no topo da página
-                //.servers(List.of(
-                //        new Server().url("https://romsociety-830621320948.southamerica-east1.run.app")
-                //                .description("Servidor de Produção (HTTPS)")
-                //))
+                .servers(List.of(
+                        new Server().url("https://romsociety-830621320948.southamerica-east1.run.app")
+                                .description("Servidor de Produção (HTTPS)")
+                ))
                 .addSecurityItem(new SecurityRequirement().addList(securitySchemeName))
                 .components(new Components()
                         .addSecuritySchemes(securitySchemeName,
