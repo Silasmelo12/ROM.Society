@@ -27,7 +27,8 @@ public class OpenApiConfig {
                         .contact(new Contact().name("Seu Nome").email("seuemail@romconcept.com")))
                 // Adiciona o botão de "Authorize" global no topo da página
                 .servers(List.of(
-                        new Server().url("https://romsociety-830621320948.southamerica-east1.run.app")
+                        //new Server().url("https://romsociety-830621320948.southamerica-east1.run.app") //prod
+                        new Server().url("https://testeromsociety-830621320948.southamerica-east1.run.app") // dev
                                 .description("Servidor de Produção (HTTPS)")
                 ))
                 .addSecurityItem(new SecurityRequirement().addList(securitySchemeName))
