@@ -20,6 +20,7 @@ public class TokenService {
         try {
             Algorithm algorithm = Algorithm.HMAC256(chaveSecreta);
             return JWT.create()
+                    .withClaim("role", user.getPlan().name())
                     .withIssuer("Rom Society")
                     .withSubject(user.getEmail())
                     .withExpiresAt(genExpirationDate())
