@@ -23,7 +23,7 @@ public class ResendEmailService {
         this.resend = resend;
     }
 
-    @Async
+    @Async("emailExecutor")
     public void sendRegistrationConfirmation(String toEmail, String userName, String eventTitle) {
 
         String safeName = HtmlUtils.htmlEscape(userName);
