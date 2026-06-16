@@ -50,4 +50,35 @@ public class ResendEmailService {
             log.error("Falha ao enviar e-mail pelo Resend para {}: {}", toEmail, e.getMessage());
         }
     }
+
+
+    @Async("emailExecutor")
+    public void sendEventNotification(String toEmail, String userName, String eventTitle, String eventDate, String eventLocation){
+        String safeName = HtmlUtils.htmlEscape(userName);
+        String safeTitle = HtmlUtils.htmlEscape(eventTitle);
+        String safeLocation = HtmlUtils.htmlEscape(eventLocation);
+
+        String htmlBody = String.format(
+                "<h2>Olá, %s!</h2>" +
+                        "<p>Estamos animados para lembrar que o evento <strong>%s</strong> está chegando!</p>" +
+                        "<p>Data: %s<br>Local: %s</p>" +
+                        "<p>Prepare-se para uma experiência inesquecível na ROM.Concept.</p>",
+                safeName, safeTitle, eventDate, safeLocation
+        );
+
+        CreateEmailOptions params = CreateEmailOptions.builder()
+                .from("ROM.Concept <onboarding@resend.dev>")
+                .to(toEmail)
+                .subject("Novo evento exclusivo: " + eventTitle)
+                .html(htmlBody)
+                .build();
+
+        try {
+            CreateEmailResponse data = resend.emails().send(params);
+            log.info("Notificação de evento enviada com sucesso para {}. Resend ID: {}", toEmail, data.getId());
+        } catch (ResendException e) {
+            log.error("Falha ao enviar notificação de evento pelo Resend para {}: {}", toEmail, e.getMessage());
+        }
+    }
+
 }

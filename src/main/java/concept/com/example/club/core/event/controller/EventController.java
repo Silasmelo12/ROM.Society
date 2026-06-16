@@ -92,4 +92,10 @@ public class EventController {
         return ResponseEntity.noContent().build();
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("/{eventId}/notify-subscribers")
+    public ResponseEntity<Void> notifySubscribers(@PathVariable String eventId) {
+        eventService.notifySubscribers(eventId);
+        return ResponseEntity.accepted().build();
+    }
 }

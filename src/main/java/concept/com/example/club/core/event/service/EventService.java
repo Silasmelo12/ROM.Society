@@ -11,6 +11,7 @@ import concept.com.example.club.core.event.model.Event;
 import concept.com.example.club.core.event.repository.EventRepository;
 import concept.com.example.club.core.user.model.User;
 import concept.com.example.club.core.user.repository.UserRepository;
+import concept.com.example.club.integration.resend.service.ResendEmailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -24,6 +25,7 @@ import org.slf4j.Logger;
 import concept.com.example.club.common.exception.PlanNotAllowedException;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -34,6 +36,7 @@ public class EventService {
     private final EventMapper eventMapper;
     private final UserRepository userRepository;
     private final GcsStorageService storageService;
+    private final ResendEmailService resendEmailService;
 
     @Transactional
     public EventResponseDTO createEvent(EventCreateRequestDTO dto, MultipartFile bannerImage) {
@@ -109,5 +112,31 @@ public class EventService {
                                                                                             // deletar
         event.setActive(false);
         eventRepository.save(event);
+    }
+
+    public void notifySubscribers(String eventId) {
+        Event event = eventRepository.findByIdAndActiveTrue(eventId)
+                .orElseThrow(() -> new EventNotFoundException("Evento não encontrado."));
+
+        List<User> elegiveis  = userRepository.findByMarketingOptInTrueAndActiveTrue()
+                .stream()
+                .filter(user -> event.getAllowedPlans().contains(user.getPlan()))
+                .toList();
+
+        // Aqui você pode implementar a lógica para notificar os inscritos, por exemplo, usando um serviço de email
+        log.info("Disparando notificação do evento {} para {} assinantes.", event.getTitle(), elegiveis.size());
+
+        elegiveis.forEach(
+                user ->
+                        resendEmailService.sendEventNotification(
+                                user.getEmail(),
+                                user.getName(),
+                                event.getTitle(),
+                                event.getDateTime().toString(),
+                                event.getLocation()
+                        )
+        );
+
+
     }
 }
