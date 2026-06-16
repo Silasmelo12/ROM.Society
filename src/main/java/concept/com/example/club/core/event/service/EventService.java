@@ -123,7 +123,6 @@ public class EventService {
                 .filter(user -> event.getAllowedPlans().contains(user.getPlan()))
                 .toList();
 
-        // Aqui você pode implementar a lógica para notificar os inscritos, por exemplo, usando um serviço de email
         log.info("Disparando notificação do evento {} para {} assinantes.", event.getTitle(), elegiveis.size());
 
         elegiveis.forEach(
